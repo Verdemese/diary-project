@@ -8,7 +8,7 @@ const StyledSignIn = styled.div`
     display: block;
     width: 36rem;
     background-color: white;
-    height: 33rem;
+    height: 26rem;
     margin: auto;
     border-radius: 40px;
 
@@ -17,7 +17,7 @@ const StyledSignIn = styled.div`
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 60%;
+        width: 80%;
         height: 100%;
         margin: auto;
         text-align: center;
@@ -85,8 +85,8 @@ const signIn = props => (
                 <input type="text" placeholder="e-mail" required />
                 <input type="text" placeholder="password" required />
                 <StyledButtonContainer>
-                    <Button >Sign In</Button>
-                    <Button buttonType="submit">Sign Up</Button>
+                    <Button funcType="sign-in" >Sign In</Button>
+                    <Button funcType="sign-up" buttonType="submit">Sign Up</Button>
                 </StyledButtonContainer>
             </form>
         </StyledSignIn>

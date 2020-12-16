@@ -9,6 +9,7 @@ const StyledToolbar = styled.header`
     margin: 0;
     background-color: white;
     position: fixed;
+    z-index: 100;
     display: flex;
     justify-content: space-evenly;
 `

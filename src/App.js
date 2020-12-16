@@ -1,13 +1,13 @@
-import './App.css';
+import "./App.css";
 
-import Layout from './container/Layout/Layout';
-import SignIn from './component/SignIn/SignIn'
+import Layout from "./container/Layout/Layout";
+import CalendarBuilder from './container/CalendarBuilder/CalendarBuilder';
 
 function App() {
   return (    
-    <div className="App">
+    <div className='App'>
       <Layout>
-        <SignIn />
+        <CalendarBuilder />
       </Layout>
     </div>      
   );

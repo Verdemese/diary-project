@@ -2,9 +2,12 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 20px;
+}
+
 body {
   background: linear-gradient(#e66465, #9198e5);
-  font-size: 20px;
 }
 
 .App {

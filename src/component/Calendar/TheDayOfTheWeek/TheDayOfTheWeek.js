@@ -6,6 +6,16 @@ const StyledDaysContainer = styled.div`
     width: 100%;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    background-color: white;
+    border-bottom: 2px solid black;
+    
+    & span:first-child {
+        color: red;
+    }
+
+    & span:last-child {
+        color: grey;
+    }
 `
 
 const DAY_OF_THE_WEEK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
