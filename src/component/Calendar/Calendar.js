@@ -3,36 +3,39 @@ import styled from 'styled-components';
 
 import CalendarNumber from './CalendarNumber/CalendarNumber';
 import TheDayOfTheWeek from './TheDayOfTheWeek/TheDayOfTheWeek';
+import ChangeDate from './ChangeDate/ChangeDate';
 
 const StyledCalendar = styled.div`
     width: 100%;
-    height: 28rem;
+    height: auto;
     background-color: white;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
 `
 
 const calendar = props => {
 
-    const dateDetail = props.datesDetail
+    const datesDetail = props.datesDetail
         .map(date => {
             return <CalendarNumber 
+                clicked={props.selectedMemo}
                 key={date.dayOfTheWeek + date.date}
-                dayOfTheWeek={date.dayOfTheWeek + 1}>{date.date}</CalendarNumber>
-                //grid에서 0은 작동하지 않기 떄문
+                dayOfTheWeek={date.dayOfTheWeek + 1}
+                active={date.checked} >{date.date}</CalendarNumber>
+                //dayOfTheWeek = 0, 1, 2 ... 6 grid에서 0은 작동하지 않는다.
         });
-
+    
     return (
-        <div style={{width: '35rem', margin: 'auto'}}>
-            <div>
-                <p>next</p>
-                <p>today's date</p>
-                <p>prev</p>
-            </div>
+        <div style={{width: '32rem', margin: 'auto'}}>
+            <ChangeDate 
+                prevClicked={props.previousMonth}
+                nextClicked={props.nextMonth}
+                month={props.selectedMonth}/>
             <TheDayOfTheWeek />
             <StyledCalendar>
-                {dateDetail}
+                {datesDetail}
             </StyledCalendar>
         </div>
     )
