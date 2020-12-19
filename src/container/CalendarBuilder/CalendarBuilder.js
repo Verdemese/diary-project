@@ -5,6 +5,8 @@ import Calendar from '../../component/Calendar/Calendar';
 import Modal from '../../component/UI/Modal/Modal';
 import WordContainer from '../../component/Calendar/WordsContainer/WordsContainer';
 
+const DAY_OF_THE_WEEK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
 class CalendarControl extends Component {
 
     state = {
@@ -24,6 +26,11 @@ class CalendarControl extends Component {
         date: 0,
         modalOpened: false,
 
+        //selected date
+        selectedDate: {},
+
+        //add word black
+        addWord: true,
     }
 
     componentDidMount() {
@@ -41,11 +48,14 @@ class CalendarControl extends Component {
 
             dateContainer[date] = {
                 date,
-                checked: date === today.getDate() ? true : false,
+                //checked: false,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                words: {
-                    competition: '경쟁'
-                }
+                id: date + `${DAY_OF_THE_WEEK[dayOfTheWeek.getDay()]}`,
+                words: [{
+                    word: 'competition',
+                    meaning: '경쟁',
+                    //id: 'competition경쟁'
+                }]
             }
 
             datesDetail.push(dateContainer[date]);
@@ -59,6 +69,8 @@ class CalendarControl extends Component {
         });
     }
 
+
+    //다음 달
     nextMonthHandler = () => {
         let year = this.state.year;
         let month = this.state.month + 1; //현재의 month에서 1을 더함
@@ -80,11 +92,14 @@ class CalendarControl extends Component {
 
             dateContainer[date] = {
                 date,
-                checked: false,
+                //checked: false,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                words: {
-                    competition: '경쟁'
-                }
+                id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
+                words: [{
+                    word: 'competition',
+                    meaning: '경쟁',
+                    //id: 'competition경쟁'
+                }]
             }
 
             datesDetail.push(dateContainer[date]);
@@ -97,6 +112,7 @@ class CalendarControl extends Component {
         });
     }
 
+    // 이전 달 
     previousMonthHandler = () => {
         let year = this.state.year;
         let month = this.state.month - 1;
@@ -118,12 +134,13 @@ class CalendarControl extends Component {
 
             dateContainer[date] = {
                 date,
-                checked: false,
+                //checked: false,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
+                id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: [{
                     word: 'competition',
                     meaning: '경쟁',
-                    id: 'competition경쟁'
+                    //id: 'competition경쟁'
                 }]
             }
 
@@ -137,29 +154,101 @@ class CalendarControl extends Component {
         });
     }
 
-    selectMemoHandler = () => {
+    //특정 date를 클릭했을 때 
+    selectDateHandler = (id) => {
         this.setState({ modalOpened: true });
+
+        const date = [...this.state.datesDetail]
+            .find(date => date.id === id);
+
+        this.setState({ selectedDate: date });
     }
 
+    //backdrop이나 modal을 닫을 때
     closeModalHandler = () => {
         this.setState({ modalOpened: false });
+    }
+
+    submitHandler = (event) => {
+
+        event.preventDefault();
+
+        let words = event.target.word; 
+        let meanings = event.target.meaning;
+
+        if (!words || !meanings) return;
+
+        if (!words.length || !meanings.length) {
+            words = [words];
+            meanings = [meanings];
+        } else {
+            words = [...words];
+            meanings = [...meanings];
+        }
+        
+        const selectedDate = {...this.state.selectedDate}
+        const container = [];
+
+        words.forEach((word, index) => {
+
+            if (!word.value || !meanings[index].value) return;
+
+            const obj = {}
+            obj.word = word.value;
+            obj.meaning = meanings[index].value;
+
+            container.push(obj);
+        })
+        
+        selectedDate.words = container;
+
+        this.setState({ selectedDate: selectedDate});
+    }
+
+    addWordHandler = () => {
+        const selectedDate = {...this.state.selectedDate};
+        const words = [...this.state.selectedDate.words];
+        const addWord = {
+            word: '',
+            meaning: ''
+        };
+
+        words.push(addWord);
+
+        selectedDate.words = words;
+
+        this.setState({ selectedDate: selectedDate });
+    }
+
+    deleteWordHandler = (word) => {
+        const selectedDate = {...this.state.selectedDate};
+
+        const deleteWord = selectedDate.words.findIndex(item => item === word);
+
+        selectedDate.words.splice(deleteWord, 1);
+
+        this.setState({ selectedDate: selectedDate });
     }
 
     render() {
 
         const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
 
-        console.log(this.state.modalOpened);
+        console.log(this.state.selectedDate.words);
 
         return (
             <>
                 <Modal 
                     modalOpened={this.state.modalOpened}
                     cancelModal={this.closeModalHandler}>
-                        <WordContainer />
+                        <WordContainer 
+                            clicked={this.addWordHandler}
+                            deleteWord={this.deleteWordHandler}
+                            submitted={(event) => this.submitHandler(event)}
+                            words={this.state.selectedDate.words}/>
                     </Modal>
                 <Calendar
-                    selectedMemo={this.selectMemoHandler}
+                    selectedMemo={this.selectDateHandler}
                     nextMonth={this.nextMonthHandler}
                     previousMonth={this.previousMonthHandler}
                     datesDetail={this.state.datesDetail}

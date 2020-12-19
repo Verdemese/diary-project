@@ -10,12 +10,10 @@ const StyledChangeDateContainer = styled.div`
 
 const changeDate = props => {
     
-    let month = <h1>{props.month}</h1>;
-
     return (
         <StyledChangeDateContainer>
             <button onClick={props.prevClicked} type="button">{'<'}</button>
-            {month}
+                <h1>{props.month}</h1>
             <button onClick={props.nextClicked} type="button">{'>'}</button>
         </StyledChangeDateContainer>
     )
