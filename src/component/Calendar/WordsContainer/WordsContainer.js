@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Word from './Word/Word';
+
+import AddWord from './Word/AddWord';
+import AddedWord from './Word/AddedWord';
 
 const StyledWordsContainer = styled.form`
     width: 100%;
@@ -12,20 +14,48 @@ const StyledWordsContainer = styled.form`
 
 const StyledButtonContainer = styled.div`
     width: 100%;    
-position: fixed;
+    position: fixed;
     bottom: 0;
     text-align: center;
 `
 
 const wordsContainer = props => {
     
-    let amountInputs;
+    let addWord;
 
     if (props.words) {
-        amountInputs = props.words
+        addWord = props.words
+            .map((word, index) => {
+                return (
+                    <AddWord
+                        clicked={() => props.deleteWord(word)}
+                        key={index} />
+                );
+            });
+    }
+
+    let savedWords;
+
+    if (props.savedWords) {
+        savedWords = props.savedWords
             //[undefined, undefined, undefined]
             .map((word, index) => {
-                return <Word clicked={() => props.deleteWord(word)} key={index}/>
+
+                if (!word.word && !word.meaning) return; 
+
+                return (
+                    <AddedWord
+                    //mouse hover 이벤트
+                        mouseEntered={() => props.mouseEntered(word)}
+                        mouseLeaved={() => props.mouseLeaved(word)}
+                        checkHover={word.hovered}
+                    
+                    //saved word box
+                        clicked={() => props.deleteSavedWord(word)}
+                        word={word.word}
+                        meaning={word.meaning}
+                        key={index} />
+                );
             });
     }
 
@@ -40,7 +70,8 @@ const wordsContainer = props => {
     return (
         <StyledWordsContainer
             onSubmit={props.submitted}>
-            {amountInputs}
+            {savedWords}
+            {addWord}
             <StyledButtonContainer>
                 <button onClick={props.clicked} type='button'>+</button>
                 <button type='submit'>save</button>

@@ -4,8 +4,9 @@ import styled from 'styled-components';
 const StyledSpan = styled.span`
     vertical-align: baseline;
     text-align: left;
-    padding: 5px;
+    padding: 0.5rem;
     height: 4.8rem;
+    cursor: pointer;
 
     &:first-child {
         grid-column: ${props=> props.firstDay}

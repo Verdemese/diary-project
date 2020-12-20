@@ -8,9 +8,11 @@ import ChangeDate from './ChangeDate/ChangeDate';
 const StyledCalendar = styled.div`
     width: 100%;
     height: auto;
-    background-color: white;
+    background-color: transparent;
+    color: white;
     margin: auto;
     display: grid;
+    
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(5, 1fr);
 `
