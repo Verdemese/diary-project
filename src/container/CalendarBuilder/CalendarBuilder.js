@@ -12,11 +12,9 @@ class CalendarControl extends Component {
     state = {
         datesDetail: [],
         //{
-        //    checked: false,
-        //    dayOftheWeek: 'monday',
-        //    words: [{
-        //        competition: '경쟁'
-        //    }]
+        //    word: 'competition',
+        //    meaning: '경쟁',
+        //    id: 'competition경쟁'
         //}
 
 
@@ -29,10 +27,12 @@ class CalendarControl extends Component {
         //selected date
         selectedDate: {},
 
-        //add word black
-        addWord: true,
+        //added words
+        savedDate: {},
     }
 
+
+    //처음 render했을 때
     componentDidMount() {
         const today = new Date();
         const year = today.getFullYear();
@@ -48,14 +48,9 @@ class CalendarControl extends Component {
 
             dateContainer[date] = {
                 date,
-                //checked: false,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
                 id: date + `${DAY_OF_THE_WEEK[dayOfTheWeek.getDay()]}`,
-                words: [{
-                    word: 'competition',
-                    meaning: '경쟁',
-                    //id: 'competition경쟁'
-                }]
+                words: []
             }
 
             datesDetail.push(dateContainer[date]);
@@ -68,6 +63,7 @@ class CalendarControl extends Component {
             datesDetail: datesDetail,
         });
     }
+
 
 
     //다음 달
@@ -92,14 +88,9 @@ class CalendarControl extends Component {
 
             dateContainer[date] = {
                 date,
-                //checked: false,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
                 id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
-                words: [{
-                    word: 'competition',
-                    meaning: '경쟁',
-                    //id: 'competition경쟁'
-                }]
+                words: []
             }
 
             datesDetail.push(dateContainer[date]);
@@ -111,6 +102,8 @@ class CalendarControl extends Component {
             datesDetail: datesDetail,
         });
     }
+
+
 
     // 이전 달 
     previousMonthHandler = () => {
@@ -134,14 +127,9 @@ class CalendarControl extends Component {
 
             dateContainer[date] = {
                 date,
-                //checked: false,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
                 id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
-                words: [{
-                    word: 'competition',
-                    meaning: '경쟁',
-                    //id: 'competition경쟁'
-                }]
+                words: []
             }
 
             datesDetail.push(dateContainer[date]);
@@ -154,6 +142,8 @@ class CalendarControl extends Component {
         });
     }
 
+
+
     //특정 date를 클릭했을 때 
     selectDateHandler = (id) => {
         this.setState({ modalOpened: true });
@@ -161,16 +151,20 @@ class CalendarControl extends Component {
         const date = [...this.state.datesDetail]
             .find(date => date.id === id);
 
-        this.setState({ selectedDate: date });
+        this.setState({ selectedDate: date, savedDate: date });
     }
+
+
 
     //backdrop이나 modal을 닫을 때
     closeModalHandler = () => {
         this.setState({ modalOpened: false });
     }
 
-    submitHandler = (event) => {
 
+
+    //save버튼을 눌렀을 때
+    saveHandler = (event) => {
         event.preventDefault();
 
         let words = event.target.word; 
@@ -178,7 +172,7 @@ class CalendarControl extends Component {
 
         if (!words || !meanings) return;
 
-        if (!words.length || !meanings.length) {
+        if (!words.length || !meanings.length) { //array가 아닐 때
             words = [words];
             meanings = [meanings];
         } else {
@@ -186,7 +180,7 @@ class CalendarControl extends Component {
             meanings = [...meanings];
         }
         
-        const selectedDate = {...this.state.selectedDate}
+        let savedDate = {...this.state.savedDate};
         const container = [];
 
         words.forEach((word, index) => {
@@ -196,15 +190,26 @@ class CalendarControl extends Component {
             const obj = {}
             obj.word = word.value;
             obj.meaning = meanings[index].value;
+            obj.id = word.value + meanings[index].value;
+            obj.hovered = false;
 
             container.push(obj);
         })
         
-        selectedDate.words = container;
+        savedDate.words = [...savedDate.words, ...container];
 
-        this.setState({ selectedDate: selectedDate});
+        this.setState({ savedDate: savedDate });
+
+        //input value를 초기화함
+        words.forEach((word, index) =>{
+            meanings[index].value = ''
+            word.value = '';
+        });
     }
 
+
+
+    //+버튼을 눌렀을 때
     addWordHandler = () => {
         const selectedDate = {...this.state.selectedDate};
         const words = [...this.state.selectedDate.words];
@@ -220,6 +225,9 @@ class CalendarControl extends Component {
         this.setState({ selectedDate: selectedDate });
     }
 
+
+
+    //input 상태의 word box를 삭제할 때
     deleteWordHandler = (word) => {
         const selectedDate = {...this.state.selectedDate};
 
@@ -230,11 +238,56 @@ class CalendarControl extends Component {
         this.setState({ selectedDate: selectedDate });
     }
 
+
+
+    // saved된 date에서 word를 삭제할 때 
+    deleteSavedWordHandler = (word) => {
+        let savedDate = {...this.state.savedDate};
+
+        const deleteWord = savedDate.words.findIndex(item => item === word);
+
+        savedDate.words.splice(deleteWord, 1);
+
+        this.setState({ savedDate: savedDate });
+    }
+
+
+
+    //save된 word box에서 마우스가 들어올 때
+    wordEnterHandler = (word) => {
+        const savedDate = {...this.state.savedDate};
+
+        const checkHover = savedDate.words.findIndex(item => item === word);
+
+        savedDate.words[checkHover].hovered = true;
+
+        console.log(savedDate.words[checkHover].hovered);
+
+        this.setState({ savedDate: savedDate });
+    }
+
+
+
+    //save된 word box에서 마우스가 나갈때
+    wordLeaveHandler = (word) => {
+        const savedDate = {...this.state.savedDate};
+
+        const checkHover = savedDate.words.findIndex(item => item === word);
+
+        savedDate.words[checkHover].hovered = false;
+
+        console.log(savedDate.words[checkHover].hovered);
+
+        this.setState({ savedDate: savedDate });
+    }
+
+
+
     render() {
 
-        const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
+        console.log(this.state.selectedDate);
 
-        console.log(this.state.selectedDate.words);
+        const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
 
         return (
             <>
@@ -242,10 +295,21 @@ class CalendarControl extends Component {
                     modalOpened={this.state.modalOpened}
                     cancelModal={this.closeModalHandler}>
                         <WordContainer 
+                        //input 상태의 word box
                             clicked={this.addWordHandler}
                             deleteWord={this.deleteWordHandler}
-                            submitted={(event) => this.submitHandler(event)}
-                            words={this.state.selectedDate.words}/>
+                            words={this.state.selectedDate.words}
+                            //wordChange={this.wordChangeHandler}
+                            
+                        //save된 word box
+                            savedWords={this.state.savedDate.words}
+                            deleteSavedWord={this.deleteSavedWordHandler}
+                            mouseEntered={this.wordEnterHandler}
+                            mouseLeaved={this.wordLeaveHandler}
+                        
+                        //save 버튼
+                            submitted={(event) => this.saveHandler(event)}
+                            />
                     </Modal>
                 <Calendar
                     selectedMemo={this.selectDateHandler}
