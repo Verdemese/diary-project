@@ -20,12 +20,10 @@ const StyledSpan = styled.span`
 
 const calendarNumber = props => {
 
-    const id = props.id;
-
     return (
         <StyledSpan 
             className={props.active ? 'active' : null}
-            onClick={() => props.clicked(id)}
+            onClick={props.clicked}
             firstDay={props.dayOfTheWeek}>{props.children}</StyledSpan>
     );
 }

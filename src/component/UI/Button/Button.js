@@ -10,6 +10,7 @@ const StyledButton = styled.button`
     width: 100%;
     color: white;
     cursor: pointer;
+    background-color: rgba(229,145,180, 0.5);
 
     &.sign-in {
         background-color: #adcfd3;
@@ -29,6 +30,7 @@ const StyledButton = styled.button`
 
 const button = props => (
     <StyledButton 
+        onClick={props.clicked}
         type={props.buttonType} 
         className={props.funcType}>{props.children}</StyledButton>
 )

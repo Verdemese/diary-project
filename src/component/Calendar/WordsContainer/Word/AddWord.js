@@ -3,12 +3,11 @@ import styled from 'styled-components';
 
 const StyledAddWord = styled.div`
     display: flex;
+    width: 100%;
     margin: 8px 0;
-    width: 90%;
-    margin: auto;
     justify-content: space-between;
-    font-size: 0.7rem;
-    
+    align-items: center;
+
     & span {
         width: 49%;
         border-bottom: 1px solid black;
@@ -20,10 +19,21 @@ const StyledAddWord = styled.div`
     }
     
     & input {
+        font-size: 0.8rem;
         width: 100%;
-        padding: 15px;
+        padding: 10px;
         border: none;
         background-color: transparent;
+    }
+
+    & button {
+        border-radius: 50px;
+        border: none;
+        background-color: rgba(255,34,85, 0.4);
+        color: white;
+        cursor: pointer;
+        width: 1.3rem;
+        height: 1.3rem;
     }
 `
 

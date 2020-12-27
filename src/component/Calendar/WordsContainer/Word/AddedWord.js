@@ -3,15 +3,14 @@ import styled from 'styled-components';
 
 const StyledAddWord = styled.div`
     display: flex;
-    margin: 8px 0;
-    width: 90%;
-    margin: auto;
+    margin: 10px 0;
+    width: 100%;
     justify-content: space-between;
-    font-size: 0.7rem;
+    align-items: center;
+    background-color: rgba(196,199,255, 0.3);
 
     & span {
         width: 49%;
-        border-bottom: 1px solid black;
     }
 
     & span:first-child::after {
@@ -22,7 +21,7 @@ const StyledAddWord = styled.div`
     & p {
         width: 100%;
         margin: 0;
-        padding: 15px;
+        padding: 10px;
         display: inline-block;
     }
 
@@ -32,6 +31,13 @@ const StyledAddWord = styled.div`
     }
 
     & button {
+        border-radius: 50px;
+        border: none;
+        background-color: rgba(255,34,85, 0.4);
+        color: white;
+        cursor: pointer;
+        width: 1.3rem;
+        height: 1.3rem;
         visibility: hidden;
         transition: all 0.15s;
         transform: translateX(100%);

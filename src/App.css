@@ -1,9 +1,11 @@
 *, *::after, *::before {
   box-sizing: border-box;
+  /*font-family: 'Nanum Pen Script', cursive;*/
 }
 
 html {
   font-size: 20px;
+  
 }
 
 body {

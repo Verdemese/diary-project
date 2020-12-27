@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-//import styled from "styled-component";
+import axios from '../../aixos-wordsDate'
 
 import Calendar from '../../component/Calendar/Calendar';
 import Modal from '../../component/UI/Modal/Modal';
@@ -11,11 +11,11 @@ class CalendarControl extends Component {
 
     state = {
         datesDetail: [],
-        //{
-        //    word: 'competition',
-        //    meaning: '경쟁',
-        //    id: 'competition경쟁'
-        //}
+        /*{
+            word: 'competition',
+            meaning: '경쟁',
+            id: 'competition경쟁'
+        }*/
 
 
         //selectedYear
@@ -29,6 +29,9 @@ class CalendarControl extends Component {
 
         //added words
         savedDate: {},
+
+        //load spinner
+        isLoading: false,
     }
 
 
@@ -40,28 +43,46 @@ class CalendarControl extends Component {
 
         const lastDay = new Date(year, month + 1, 0);
         const datesDetail = [];
-        const dateContainer = {}
+        let updatedDetail = [];
+        const dateObejct = {}
         
         for (let date = 1; date <= lastDay.getDate(); date++) {
 
             const dayOfTheWeek = new Date(year, month, date);
 
-            dateContainer[date] = {
+            dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
                 id: date + `${DAY_OF_THE_WEEK[dayOfTheWeek.getDay()]}`,
                 words: []
             }
 
-            datesDetail.push(dateContainer[date]);
+            datesDetail.push(dateObejct[date]);
         }
 
         this.setState({
-            today: today,
             year: year,
             month: month,
             datesDetail: datesDetail,
         });
+
+
+
+        //추후 변경
+        axios.get('/user.json')
+            .then(response => {
+                for (let key in response.data) {
+                    if (response.data[key].year === year && response.data[key].month  === month) {
+                        updatedDetail = [...response.data[key].datesDetail];
+                        this.setState({ datesDetail: updatedDetail });
+                    }
+                }
+            })
+    }
+
+
+
+    componentDidUpdate(prevProps, prevState) {
     }
 
 
@@ -80,20 +101,20 @@ class CalendarControl extends Component {
 
         const lastDay = new Date(year, month + 1, 0);
         const datesDetail = [];
-        const dateContainer = {}
+        const dateObejct = {}
 
         for (let date = 1; date <= lastDay.getDate(); date++) {
 
             const dayOfTheWeek = new Date(year, month, date);
 
-            dateContainer[date] = {
+            dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
                 id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: []
             }
 
-            datesDetail.push(dateContainer[date]);
+            datesDetail.push(dateObejct[date]);
         }
 
         this.setState({
@@ -119,20 +140,20 @@ class CalendarControl extends Component {
 
         const lastDay = new Date(year, month + 1, 0);
         const datesDetail = [];
-        const dateContainer = {}
+        const dateObejct = {}
 
         for (let date = 1; date <= lastDay.getDate(); date++) {
 
             const dayOfTheWeek = new Date(year, month, date);
 
-            dateContainer[date] = {
+            dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
                 id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: []
             }
 
-            datesDetail.push(dateContainer[date]);
+            datesDetail.push(dateObejct[date]);
         }
 
         this.setState({
@@ -145,11 +166,11 @@ class CalendarControl extends Component {
 
 
     //특정 date를 클릭했을 때 
-    selectDateHandler = (id) => {
+    selectDateHandler = (inputDate) => {
         this.setState({ modalOpened: true });
 
         const date = [...this.state.datesDetail]
-            .find(date => date.id === id);
+            .find(date => date === inputDate);
 
         this.setState({ selectedDate: date, savedDate: date });
     }
@@ -167,10 +188,18 @@ class CalendarControl extends Component {
     saveHandler = (event) => {
         event.preventDefault();
 
+        const updateMonth = {
+            year: this.state.year,
+            month: this.state.month,
+            //datesDetail: [...this.state.datesDetail]
+        }
+
+        const datesDetail = [...this.state.datesDetail];
+
         let words = event.target.word; 
         let meanings = event.target.meaning;
 
-        if (!words || !meanings) return;
+        if (words.value || meanings.value) return;
 
         if (!words.length || !meanings.length) { //array가 아닐 때
             words = [words];
@@ -195,10 +224,27 @@ class CalendarControl extends Component {
 
             container.push(obj);
         })
-        
+
         savedDate.words = [...savedDate.words, ...container];
 
-        this.setState({ savedDate: savedDate });
+        const index = datesDetail
+            .findIndex(date => date.id === savedDate.id);
+
+        datesDetail[index] = savedDate;
+
+
+        
+        updateMonth.datesDetail = datesDetail;
+
+        axios.post('/user.json', updateMonth)
+            .then(response => {
+                //console.log(updateMonth);
+            });
+        
+        this.setState({ 
+            datesDetail: datesDetail,
+            savedDate: savedDate 
+        });
 
         //input value를 초기화함
         words.forEach((word, index) =>{
@@ -211,12 +257,17 @@ class CalendarControl extends Component {
 
     //+버튼을 눌렀을 때
     addWordHandler = () => {
+        let words = [];
+
         const selectedDate = {...this.state.selectedDate};
-        const words = [...this.state.selectedDate.words];
         const addWord = {
             word: '',
             meaning: ''
         };
+
+        if (this.state.selectedDate.words) {
+            words = [...this.state.selectedDate.words];
+        }
 
         words.push(addWord);
 
@@ -261,8 +312,6 @@ class CalendarControl extends Component {
 
         savedDate.words[checkHover].hovered = true;
 
-        console.log(savedDate.words[checkHover].hovered);
-
         this.setState({ savedDate: savedDate });
     }
 
@@ -276,8 +325,6 @@ class CalendarControl extends Component {
 
         savedDate.words[checkHover].hovered = false;
 
-        console.log(savedDate.words[checkHover].hovered);
-
         this.setState({ savedDate: savedDate });
     }
 
@@ -285,9 +332,9 @@ class CalendarControl extends Component {
 
     render() {
 
-        console.log(this.state.selectedDate);
-
         const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
+        
+        const selectedDate = `${this.state.month + 1}-${this.state.selectedDate.date}`;
 
         return (
             <>
@@ -295,11 +342,12 @@ class CalendarControl extends Component {
                     modalOpened={this.state.modalOpened}
                     cancelModal={this.closeModalHandler}>
                         <WordContainer 
+                            clickedDate={selectedDate}
+
                         //input 상태의 word box
                             clicked={this.addWordHandler}
                             deleteWord={this.deleteWordHandler}
                             words={this.state.selectedDate.words}
-                            //wordChange={this.wordChangeHandler}
                             
                         //save된 word box
                             savedWords={this.state.savedDate.words}
@@ -308,8 +356,7 @@ class CalendarControl extends Component {
                             mouseLeaved={this.wordLeaveHandler}
                         
                         //save 버튼
-                            submitted={(event) => this.saveHandler(event)}
-                            />
+                            submitted={(event) => this.saveHandler(event)}/>
                     </Modal>
                 <Calendar
                     selectedMemo={this.selectDateHandler}

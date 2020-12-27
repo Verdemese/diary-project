@@ -11,8 +11,8 @@ const Modal = styled.div`
     top: 30%;
     transform: translateX(-50%);
     box-shadow: 1px 1px 1px black;
-    width: 25rem;
-    height: 30rem;
+    width: 30rem;
+    height: 25rem;
     margin: auto;
     max-height: 30rem;
     background-color: white;
