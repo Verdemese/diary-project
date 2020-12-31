@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Logo from '../UI/Logo/Logo';
-import Button from '../UI/Button/Button';
+import Logo from '../../UI/Logo/Logo';
+import Button from '../../UI/Button/Button';
 
 const StyledSignIn = styled.div`
     display: block;
-    width: 36rem;
+    width: 33rem;
     background-color: white;
     height: 26rem;
     margin: auto;
@@ -77,21 +77,39 @@ const StyledButtonContainer = styled.div`
     display: flex;
 `
 
-const signIn = props => (
+const signIn = props => {
+
+    let signInError;
+    
+    if (props.signInError) {
+        signInError = <p>{props.signInError}</p>
+    }
+
+    return (
     <>
         <Logo></Logo>
         <StyledSignIn>
-            <form>
-                <input type="text" placeholder="e-mail" required />
-                <input type="text" placeholder="password" required />
+            <form onSubmit={props.signInSubmitted}>
+                <input 
+                    type="text" 
+                    name="email" 
+                    placeholder="e-mail" 
+                    autoComplete="off"/>
+                <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="password" 
+                    autoComplete="off"/>
+                {signInError}
                 <StyledButtonContainer>
-                    <Button funcType="sign-in" >Sign In</Button>
-                    <Button funcType="sign-up" buttonType="submit">Sign Up</Button>
+                    <Button funcType="sign-in" buttonType='submit'>Sign In</Button>
+                    <Button funcType="sign-up" clicked={props.signUpClicked} buttonType='button'>Sign Up</Button>
                 </StyledButtonContainer>
             </form>
         </StyledSignIn>
     </>
-)
+    )
+}
 
 
 export default signIn;

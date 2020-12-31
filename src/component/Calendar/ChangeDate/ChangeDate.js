@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import Chart from '../../UI/Chart/Chart';
+
 const StyledChangeDateContainer = styled.div`
     color: white;    
     margin-top: 3rem;

@@ -6,7 +6,7 @@ import AddedWord from './Word/AddedWord';
 import Button from '../../UI/Button/Button';
 
 const StyledWordsContainer = styled.form`
-    width: 90%;
+    width: 100%;
     left: 0;
     height: 100%;
     margin: auto;
@@ -14,6 +14,10 @@ const StyledWordsContainer = styled.form`
     overflow: auto;
     background-color: white;
     padding-bottom: 4rem;
+
+    & > p {
+        padding: 0 1rem;
+    }
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -38,11 +42,25 @@ const StyledButtonContainer = styled.div`
     width: inherit;
     height: 4rem;
     position: fixed;
+    border-radius: 10px;
     background-color: white;
     bottom: 0;
     text-align: center;
     display: flex;
     justify-content: center;
+`
+
+const StyledAddButton = styled.button`
+background-color: rgba(128,128,128, 0.3);
+border: none;
+border-radius: 10px;
+width: 10%;
+height: 50%;
+position: fixed;
+right: 1rem;
+transform: translateY(-50%);
+top: 50%;
+cursor: pointer;
 `
 
 const wordsContainer = props => {
@@ -84,16 +102,29 @@ const wordsContainer = props => {
             });
     }
 
+    //추후 정리
 
     return (
         <StyledWordsContainer
             onSubmit={props.submitted}>
             <p>{props.clickedDate}</p>
-            {savedWords}
-            {addWord}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '90%',
+                padding: '0 1.5rem'
+            }}>
+                <div style={{
+                    width: '100%'
+                }}>
+                    {savedWords}
+                    {addWord}
+                </div>
+                <StyledAddButton onClick={props.clicked} type='button'>+</StyledAddButton>
+            </div>
             <StyledButtonContainer>
-                <Button clicked={props.clicked} buttonType='button'>+</Button>
                 <Button buttonType='submit'>save</Button>
+                <Button buttonType='click' clicked={props.cancelModal}>close</Button>
             </StyledButtonContainer>
         </StyledWordsContainer>
     );

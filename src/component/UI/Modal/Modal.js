@@ -9,9 +9,10 @@ const Modal = styled.div`
     z-index: 500;
     left: 50%;
     top: 30%;
+    border-radius: 10px;
     transform: translateX(-50%);
     box-shadow: 1px 1px 1px black;
-    width: 30rem;
+    width: 27rem;
     height: 25rem;
     margin: auto;
     max-height: 30rem;

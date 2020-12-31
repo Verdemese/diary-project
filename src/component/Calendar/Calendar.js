@@ -23,7 +23,8 @@ const calendar = props => {
         .map(date => {
             return <CalendarNumber 
                 id={date.id}
-                clicked={() => props.selectedMemo(date)}
+                amountWords={date.words.length}
+                clicked={() => props.selectedDate(date)}
                 key={date.dayOfTheWeek + date.date}
                 dayOfTheWeek={date.dayOfTheWeek + 1}
                 active={date.checked} >{date.date}</CalendarNumber>

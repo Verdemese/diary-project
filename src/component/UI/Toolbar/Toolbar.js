@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Logo from '../Logo/Logo';
 
 const StyledToolbar = styled.header`
+    top: 0;
     width: 100%;
     height: 4rem;
     margin: 0;
