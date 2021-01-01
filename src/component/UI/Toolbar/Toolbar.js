@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Logo from '../Logo/Logo';
+import UserUI from '../UserUI/UserUI';
 
 const StyledToolbar = styled.header`
     top: 0;
@@ -18,7 +19,11 @@ const StyledToolbar = styled.header`
 const toolbar = props => (
     <StyledToolbar>
         <Logo />
-        <p>user</p>
+        <UserUI 
+            profileClicked={props.profileClicked}
+            toggleDropdown={props.toggleDropdown} 
+            signOut={props.signOut}
+            nickName={props.nickName}/>
     </StyledToolbar>
 );
 
