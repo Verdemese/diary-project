@@ -46,12 +46,13 @@ if (!firebase.apps.length) {
 class Login extends Component {
 
     state = {
-        isAuthenticated: false,
+        isAuthenticated: true,
         userData: {},
         signUp: false,
         loading: false,
         signUpError: null,
         signInError: null,
+        activatedDropdown: false
     }
 
     componentDidMount() {
@@ -94,7 +95,7 @@ class Login extends Component {
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(user => {
                 console.log(user);
-                this.setState({ userData: user, isAuthenticated: true });
+                this.setState({ userData: user.user, isAuthenticated: true });
             })
             .catch(error => {
 
@@ -147,6 +148,21 @@ class Login extends Component {
 
     }
 
+    signOutHandler = () => {
+        firebase.auth().signOut()
+            .then(() => {
+                this.setState({ isAuthenticated: false, userData: {} });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    activateDropdownHandler = () => {
+        this.setState({ activatedDropdown: !this.state.activatedDropdown });
+    }
+
+
     render() {
 
         let spinner = <Spinner />;
@@ -154,7 +170,6 @@ class Login extends Component {
         let sign = <SignIn
             signInError={this.state.signInError}
             signInSubmitted={(event) => this.signInHandler(event)}
-            //signInSubmitted={this.props.authenticatedUser}
             signUpClicked={this.changePageToSignUpHandler} />;
 
         if (this.state.signUp) {
@@ -164,8 +179,11 @@ class Login extends Component {
         } else if (this.state.isAuthenticated) {
             sign = (
                 <>
-                    <Toolbar />
-                    <CalendarBuilder />
+                    <Toolbar 
+                        profileClicked={this.activateDropdownHandler}
+                        toggleDropdown={this.state.activatedDropdown}
+                        signOut={this.signOutHandler}/>
+                    <CalendarBuilder userUID={this.state.userData.uid}/>
                 </>
             );
         }
