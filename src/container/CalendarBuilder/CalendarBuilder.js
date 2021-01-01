@@ -82,7 +82,7 @@ class CalendarControl extends Component {
 
 
         //추후 변경
-        axios.get(`/user/${year}/${month}.json`)
+        axios.get(`/${this.props.userUID}/${year}/${month}.json`)
             .then(response => {
                 for (let key in response.data) {
                     if (response.data[key].year === year && response.data[key].month === month) {
@@ -105,7 +105,7 @@ class CalendarControl extends Component {
         if (prevState.year !== this.state.year || prevState.month !== this.state.month) {
             let updatedDetail;
 
-            axios.get(`/user/${this.state.year}/${this.state.month}.json`)
+            axios.get(`/${this.props.userUID}/${this.state.year}/${this.state.month}.json`)
                 .then(response => {
                     for (let key in response.data) {
                         if (response.data[key].year === this.state.year && response.data[key].month === this.state.month) {
@@ -208,6 +208,10 @@ class CalendarControl extends Component {
 
     //특정 date를 클릭했을 때 
     selectDateHandler = (inputDate) => {
+
+        document.querySelector('input[name="word"]').value = '';
+        document.querySelector('input[name="meaning"]').value = '';
+
         this.setState({ modalOpened: true });
 
         const date = [...this.state.datesDetail]
@@ -278,7 +282,7 @@ class CalendarControl extends Component {
 
 
 
-        axios.post(`/user/${this.state.year}/${this.state.month}.json`, updateMonth)
+        axios.post(`/${this.props.userUID}/${this.state.year}/${this.state.month}.json`, updateMonth)
             .then(response => {
 
                 this.setState({
@@ -378,9 +382,7 @@ class CalendarControl extends Component {
 
         const selectedDate = `${this.state.month + 1}-${this.state.selectedDate.date}`;
 
-        if (document.querySelector('input[name="word"]') || document.querySelector('input[name="meaning"]')){
-            document.querySelector('input[name="word"], input[name="meaning"]').value = '';
-        }
+        
 
         return (
             <>

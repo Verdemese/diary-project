@@ -70,11 +70,9 @@ const wordsContainer = props => {
     if (props.words) {
         addWord = props.words
             .map((word, index) => {
-                return (
-                    <AddWord
+                return <AddWord
                         clicked={() => props.deleteWord(word)}
-                        key={index} />
-                );
+                        key={index} />;
             });
     }
 
@@ -85,8 +83,7 @@ const wordsContainer = props => {
             .map((word, index) => {
 
                 if (word.word && word.meaning) {
-                    return (
-                        <AddedWord
+                    return <AddedWord
                             //mouse hover 이벤트
                             mouseEntered={() => props.mouseEntered(word)}
                             mouseLeaved={() => props.mouseLeaved(word)}
@@ -96,8 +93,7 @@ const wordsContainer = props => {
                             clicked={() => props.deleteSavedWord(word)}
                             word={word.word}
                             meaning={word.meaning}
-                            key={index} />
-                    );
+                            key={index} />;
                 } 
             });
     }

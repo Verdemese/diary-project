@@ -1,8 +1,5 @@
 import React, { Component } from "react"
 
-import Toolbar from "../../component/UI/Toolbar/Toolbar";
-import Login from '../Login/Login';
-
 class Layout extends Component {
 
     render () {
