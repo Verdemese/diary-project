@@ -1,42 +1,45 @@
 import React from "react";
 import styled from "styled-components";
 
-import userIcon from "../../../assets/userIcon.svg";
+import UserIcon from '../UserIcon/UserIcon';
 import Dropdown from '../Dropdown/Dropdown';
 
-const StyledUserIcon = styled.img`
-    width: 100%;
-    background-color: grey;
-    border-radius: 50%;
-    z-index: 60;
+const StyledUserUI = styled.div`
+    & .userUI__container {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        margin: 0 1rem;
+    }
+
+    & .userIcon {
+        height: 100%;
+        width: 2rem;
+        display: flex;
+        align-items: center;
+        margin: 0 1rem;
+        z-index: 50;
+    }
 `
 
 const userUI = props => {
+
+    const nickname = props.nickname || 'user';
+
     return (
-        <div >
-            <div style={{
-                position: 'relative',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                margin: '0 1rem',
-            }} onClick={props.profileClicked}>
-                <div style={{
-                    height: '100%',
-                    width: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    margin: '0 1rem',
-                    zIndex: '50',
-                }}>
-                    <StyledUserIcon src={userIcon} alt='userIcon' />
+        <StyledUserUI >
+            <div className='userUI__container'
+            onClick={props.profileClicked}>
+                <div className='userIcon'>
+                    <UserIcon />
                 </div>
                 <div style={{zIndex: '50'}}>
-                    <p>verdemese▾</p>
+                    <p>{nickname}▾</p>
                 </div>
                 <Dropdown toggleDropdown={props.toggleDropdown} signOutClicked={props.signOut}></Dropdown>
             </div>
-        </div>
+        </StyledUserUI>
     );
 }
 

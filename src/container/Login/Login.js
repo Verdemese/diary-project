@@ -7,6 +7,7 @@ import SignUp from "../../component/User/SignUp/SignUp";
 import SignIn from "../../component/User/SignIn/SignIn";
 import Spinner from '../../component/UI/Spinner/Spinner';
 import Toolbar from '../../component/UI/Toolbar/Toolbar';
+import UserProfile from '../../component/User/UserProfile/UserProfile';
 
 const firebaseConfig = {
     apiKey: "AIzaSyATl0Fe0IATE2c1SlgWajbwRkGJz6qOZC4",
@@ -46,9 +47,12 @@ if (!firebase.apps.length) {
 class Login extends Component {
 
     state = {
-        isAuthenticated: true,
+        isAuthenticated: false,
+
         userData: {},
+        userNickname: null,
         signUp: false,
+        profile: false,
         loading: false,
         signUpError: null,
         signInError: null,
@@ -91,6 +95,7 @@ class Login extends Component {
 
         let email = event.target.email.value;
         let password = event.target.password.value;
+        let user = firebase.auth().currentUser;
 
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(user => {
@@ -108,7 +113,11 @@ class Login extends Component {
                 }
 
                 this.setState({ signInError: errorMessage });
-            })
+            });
+
+        if (user) {
+            this.setState({ userNickname: user.displayName })
+        }
     }
 
     signUpHandler = (event) => {
@@ -132,7 +141,7 @@ class Login extends Component {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(user => {
                 console.log(user);
-                this.setState({ signUp: false });
+                this.setState({ signUp: false, profile: true });
             })
             .catch(error => {
                 console.log(error);
@@ -141,6 +150,8 @@ class Login extends Component {
                     errorMessage = 'Check your email format!';
                 } else if (error.code === 'auth/email-already-in-use') {
                     errorMessage = 'Email already exist!';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password should be at least 6 characters!';
                 }
 
                 this.setState({ signUpError: errorMessage });
@@ -158,12 +169,29 @@ class Login extends Component {
             });
     }
 
+    setProfileHandler = (event) => {
+        event.preventDefault();
+
+        const user = firebase.auth().currentUser;
+
+        const nickname = event.target.nickname.value;
+
+        user.updateProfile({
+            displayName: nickname 
+        });
+
+        this.setState({ profile: false });
+    }
+
     activateDropdownHandler = () => {
         this.setState({ activatedDropdown: !this.state.activatedDropdown });
     }
 
 
     render() {
+
+        console.log(this.state.userNickname);
+
 
         let spinner = <Spinner />;
 
@@ -176,10 +204,14 @@ class Login extends Component {
             sign = <SignUp
                 signUpError={this.state.signUpError}
                 signUpSubmitted={(event) => this.signUpHandler(event)} />;
+        } else if (this.state.profile) {
+            sign = <UserProfile
+                profileSubmitted={event => this.setProfileHandler(event)}/>
         } else if (this.state.isAuthenticated) {
             sign = (
                 <>
                     <Toolbar 
+                        nickname={this.state.userNickname}
                         profileClicked={this.activateDropdownHandler}
                         toggleDropdown={this.state.activatedDropdown}
                         signOut={this.signOutHandler}/>
@@ -187,6 +219,8 @@ class Login extends Component {
                 </>
             );
         }
+
+        console.log(this.state.userData);
 
         return (
             <>

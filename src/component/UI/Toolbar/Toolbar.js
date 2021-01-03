@@ -23,7 +23,7 @@ const toolbar = props => (
             profileClicked={props.profileClicked}
             toggleDropdown={props.toggleDropdown} 
             signOut={props.signOut}
-            nickName={props.nickName}/>
+            nickname={props.nickname}/>
     </StyledToolbar>
 );
 
