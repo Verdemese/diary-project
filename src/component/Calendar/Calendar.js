@@ -14,7 +14,17 @@ const StyledCalendar = styled.div`
     display: grid;
     
     grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);   
+`
+
+const TodayButton = styled.button`
+    border: none;
+    padding: 0.3rem;
+    background: #34eb83;
+    color: black;
+    border-radius: 10px;
+    right: 10%;
+    position: absolute;
 `
 
 const calendar = props => {
@@ -32,7 +42,7 @@ const calendar = props => {
         });
     
     return (
-        <div style={{width: '32rem', margin: 'auto'}}>
+        <div style={{width: '32rem', margin: 'auto', marginTop: '3rem'}}>
             <ChangeDate 
                 prevClicked={props.previousMonth}
                 nextClicked={props.nextMonth}
@@ -41,6 +51,7 @@ const calendar = props => {
             <StyledCalendar>
                 {datesDetail}
             </StyledCalendar>
+            <TodayButton onClick={props.todayClicked}><p>Today: {props.today}</p></TodayButton>
         </div>
     )
 }

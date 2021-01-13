@@ -7,6 +7,7 @@ const Backdrop = styled.div`
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    top: 0;
     visibility: hidden;
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.3);

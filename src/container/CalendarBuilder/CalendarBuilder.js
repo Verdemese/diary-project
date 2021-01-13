@@ -26,6 +26,11 @@ class CalendarControl extends Component {
 
 
         //selectedYear
+        today: {
+            year: 0,
+            month: 0,
+            date: 0
+        },
         year: 0,
         month: 0,
         date: 0,
@@ -36,6 +41,8 @@ class CalendarControl extends Component {
 
         //added words
         savedDate: {},
+        // {date: 21, dayOfTheWeek: 4, id: "21thu", words: Array(1)}
+
 
         //input box
         inputBoxes: [{
@@ -74,9 +81,14 @@ class CalendarControl extends Component {
         }
 
         this.setState({
-            year: year,
-            month: month,
+            year,
+            month,
             datesDetail: datesDetail,
+            today: {
+                year,
+                month,
+                date: today.getDate(),
+            }
         });
 
 
@@ -244,7 +256,10 @@ class CalendarControl extends Component {
         let words = event.target.word;
         let meanings = event.target.meaning;
 
-        //if (words === undefined || meanings === undefined) return;
+        if (words === undefined || meanings === undefined) {
+            words = [];
+            meanings = [];
+        };
 
         //if (!words.value || !meanings.value) return;
 
@@ -277,35 +292,31 @@ class CalendarControl extends Component {
         const index = datesDetail
             .findIndex(date => date.id === savedDate.id);
         
-
         datesDetail[index] = savedDate;
-
-
 
         axios.post(`/${this.props.userUID}/${this.state.year}/${this.state.month}.json`, updateMonth)
             .then(response => {
-
                 this.setState({
                     datesDetail: datesDetail,
                     savedDate: savedDate,
                     inputBoxes: INPUTBOXES
                 });
-            });
-
+            })
+            .catch(error => console.log(error));
 
         //input value를 초기화함
         words.forEach((word, index) => {
             meanings[index].value = ''
             word.value = '';
         });
-
-        words[0].focus();
     }
 
 
 
     //+버튼을 눌렀을 때
-    addWordHandler = () => {
+    addWordHandler = (event) => {
+
+        event.preventDefault();
 
         const inputBoxes = [...this.state.inputBoxes];
         const addWord = {
@@ -376,13 +387,25 @@ class CalendarControl extends Component {
 
 
 
+    //오늘 날짜로 이동
+    moveToTodayHandler
+
+
     render() {
 
         const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
 
-        const selectedDate = `${this.state.month + 1}-${this.state.selectedDate.date}`;
+        const selectedDate = `${this.state.year}-${this.state.month + 1}-${this.state.selectedDate.date}`;
 
-        
+        const today = `${this.state.today.year}-${this.state.today.month + 1}-${this.state.today.date}`;
+
+        const dayOfTheWeek = DAY_OF_THE_WEEK[this.state.selectedDate.dayOfTheWeek];
+
+        let amountOfSavedWords;
+
+        if (this.state.savedDate.words){
+            amountOfSavedWords = this.state.savedDate.words.length;
+        }
 
         return (
             <>
@@ -392,9 +415,11 @@ class CalendarControl extends Component {
                     <WordContainer
                         clickedDate={selectedDate}
                         cancelModal={this.closeModalHandler}
+                        dayOfTheWeek={dayOfTheWeek}
+                        amountOfSavedWords={amountOfSavedWords}
 
                         //input 상태의 word box
-                        clicked={this.addWordHandler}
+                        clicked={event => this.addWordHandler(event)}
                         deleteWord={this.deleteWordHandler}
                         words={this.state.inputBoxes}
 
@@ -408,6 +433,8 @@ class CalendarControl extends Component {
                         submitted={(event) => this.saveHandler(event)} />
                 </Modal>
                 <Calendar
+                    today={today}
+                    todayClicked={this.moveToTodayHandler}
                     selectedDate={this.selectDateHandler}
                     nextMonth={this.nextMonthHandler}
                     previousMonth={this.previousMonthHandler}

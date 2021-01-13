@@ -18,8 +18,10 @@ const StyledToolbar = styled.header`
 
 const toolbar = props => (
     <StyledToolbar>
-        <Logo />
+        <Logo/>
         <UserUI 
+            profilePic={props.profilePic}
+            profileChangeClicked={props.profileChangeClicked}
             profileClicked={props.profileClicked}
             toggleDropdown={props.toggleDropdown} 
             signOut={props.signOut}
@@ -27,4 +29,4 @@ const toolbar = props => (
     </StyledToolbar>
 );
 
-export default toolbar;
+export default React.memo(toolbar);

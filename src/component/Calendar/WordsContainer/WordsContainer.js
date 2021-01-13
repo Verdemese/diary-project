@@ -3,20 +3,44 @@ import styled from 'styled-components';
 
 import AddWord from './Word/AddWord';
 import AddedWord from './Word/AddedWord';
-import Button from '../../UI/Button/Button';
+import plus from '../../../assets/plus-symbol.png';
 
 const StyledWordsContainer = styled.form`
     width: 100%;
     left: 0;
     height: 100%;
+    border-radius: 20px;
     margin: auto;
     font-size: 1rem;
     overflow: auto;
     background-color: white;
     padding-bottom: 4rem;
 
-    & > p {
+    & .day__info {
+        margin: auto;
+        width: 80%;
+        padding-bottom: 0.5rem;
+        border-bottom: solid #ccc 1px;
+    }
+
+    & .day__info p {
         padding: 0 1rem;
+    }
+
+    & .day__info h1, h3, h4 {
+        margin: 0.7rem auto;
+    }
+
+    & .button__container {
+        width: inherit;
+        height: 4rem;
+        position: fixed;
+        border-radius: 10px;
+        background-color: white;
+        bottom: 0;
+        text-align: center;
+        display: flex;
+        justify-content: center;
     }
 
     &::-webkit-scrollbar {
@@ -38,30 +62,35 @@ const StyledWordsContainer = styled.form`
     }
 `
 
-const StyledButtonContainer = styled.div`
-    width: inherit;
-    height: 4rem;
-    position: fixed;
-    border-radius: 10px;
-    background-color: white;
+const ButtonContainer = styled.div`
+    position: absolute;
     bottom: 0;
-    text-align: center;
+    left: 0;
+    transform: translateY(50%);
+    width: 100%;
+    height: 4rem;
     display: flex;
     justify-content: center;
+    align-items: center;
+
+    & button {
+        width: 4rem;
+        height: 4rem;
+        margin: 0 1rem;
+        border-radius: 50%;
+        border-color: transparent;
+    }
+
+    & button.save, button.plus {
+        background: #63e6be;
+        color: white;
+    }
+    
+    & button:hover {
+        background: rgb(99, 230, 139);
+    }
 `
 
-const StyledAddButton = styled.button`
-background-color: rgba(128,128,128, 0.3);
-border: none;
-border-radius: 10px;
-width: 10%;
-height: 50%;
-position: fixed;
-right: 1rem;
-transform: translateY(-50%);
-top: 50%;
-cursor: pointer;
-`
 
 const wordsContainer = props => {
     
@@ -103,25 +132,35 @@ const wordsContainer = props => {
     return (
         <StyledWordsContainer
             onSubmit={props.submitted}>
-            <p>{props.clickedDate}</p>
+            <div className='day__info'>
+                <h1>{props.clickedDate}</h1>
+                <h3>{props.dayOfTheWeek}</h3>
+                <h4>amount: {props.amountOfSavedWords}</h4>
+            </div>
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                width: '90%',
-                padding: '0 1.5rem'
+                width: '100%',
+                padding: '0 10%',
+                margin: '0'
             }}>
                 <div style={{
-                    width: '100%'
+                    width: '100%',
+                    marginTop: '10px',
                 }}>
                     {savedWords}
                     {addWord}
                 </div>
-                <StyledAddButton onClick={props.clicked} type='button'>+</StyledAddButton>
             </div>
-            <StyledButtonContainer>
-                <Button buttonType='submit'>save</Button>
-                <Button buttonType='click' clicked={props.cancelModal}>close</Button>
-            </StyledButtonContainer>
+            <ButtonContainer>
+                <button className='save' type='submit'>save</button>
+                <button className='plus' type='click' onClick={props.clicked}>
+                    <img style={{
+                        width: '50%',
+                        background: 'transparent',
+                    }} src={plus} alt='+' />
+                </button>
+            </ButtonContainer> 
         </StyledWordsContainer>
     );
 }

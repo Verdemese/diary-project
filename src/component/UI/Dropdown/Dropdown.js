@@ -31,14 +31,19 @@ const StyledDropdown = styled.ul`
         border: none;
     }
 
+    & button:hover {
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+    }
+
 `
 
 const dropdown = props => {
     return (
         <StyledDropdown className={props.toggleDropdown ? 'toggle' : null}>
-            <li><button type='button'>profile</button></li>
+            <li><button onClick={props.profileChangeClicked} type='button'>profile</button></li>
             <li><button type='button'>quiz</button></li>
-            <li onClick={props.signOutClicked}><button type='button'>sign-out</button></li>
+            <li><button onClick={props.signOutClicked} type='button'>sign-out</button></li>
         </StyledDropdown>
     );
 }

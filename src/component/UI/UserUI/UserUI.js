@@ -5,6 +5,8 @@ import UserIcon from '../UserIcon/UserIcon';
 import Dropdown from '../Dropdown/Dropdown';
 
 const StyledUserUI = styled.div`
+    cursor: pointer;    
+
     & .userUI__container {
         position: relative;
         height: 100%;
@@ -14,7 +16,7 @@ const StyledUserUI = styled.div`
     }
 
     & .userIcon {
-        height: 100%;
+        height: 2rem;
         width: 2rem;
         display: flex;
         align-items: center;
@@ -32,12 +34,14 @@ const userUI = props => {
             <div className='userUI__container'
             onClick={props.profileClicked}>
                 <div className='userIcon'>
-                    <UserIcon />
+                    <UserIcon width='2.5rem' height='2.5rem' profilePic={props.profilePic}/>
                 </div>
                 <div style={{zIndex: '50'}}>
                     <p>{nickname}▾</p>
                 </div>
-                <Dropdown toggleDropdown={props.toggleDropdown} signOutClicked={props.signOut}></Dropdown>
+                <Dropdown 
+                    profileChangeClicked={props.profileChangeClicked}
+                    toggleDropdown={props.toggleDropdown} signOutClicked={props.signOut}></Dropdown>
             </div>
         </StyledUserUI>
     );

@@ -6,7 +6,7 @@ const logo = props => (
             textAlign: 'center',
             margin: 'auto',
             fontSize: '2rem',
-        }}>logo</p>
+        }}>Engry</p>
     </>
 )
 

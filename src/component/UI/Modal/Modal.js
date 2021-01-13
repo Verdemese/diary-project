@@ -8,12 +8,12 @@ const Modal = styled.div`
     position: fixed;
     z-index: 500;
     left: 50%;
-    top: 30%;
+    top: 20%;
     border-radius: 10px;
     transform: translateX(-50%);
     box-shadow: 1px 1px 1px black;
     width: 27rem;
-    height: 25rem;
+    height: 30rem;
     margin: auto;
     max-height: 30rem;
     background-color: white;

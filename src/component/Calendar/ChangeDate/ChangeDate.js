@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const StyledChangeDateContainer = styled.div`
     color: white;    
-    margin-top: 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,6 +13,10 @@ const StyledChangeDateContainer = styled.div`
         height: 5rem;
         background-color: transparent;
         border: none;
+    }
+
+    & button:hover {
+        background: rgba(0, 0, 0, 0.2);
     }
 `
 

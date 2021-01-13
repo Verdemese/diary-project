@@ -77,6 +77,7 @@ const StyledButtonContainer = styled.div`
     display: flex;
 `
 
+
 const signUp = props => {
 
     let errorMessage;

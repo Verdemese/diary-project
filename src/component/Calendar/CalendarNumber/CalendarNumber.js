@@ -48,4 +48,4 @@ const calendarNumber = props => {
     );
 }
 
-export default calendarNumber;
+export default React.memo(calendarNumber);

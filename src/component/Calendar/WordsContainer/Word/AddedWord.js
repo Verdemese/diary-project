@@ -31,31 +31,31 @@ const StyledAddWord = styled.div`
     }
 
     & button {
-        border-radius: 50px;
-        border: none;
-        background-color: rgba(255,34,85, 0.4);
-        color: white;
-        cursor: pointer;
-        width: 1.3rem;
-        height: 1.3rem;
         visibility: hidden;
-        transition: all 0.15s;
-        transform: translateX(100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: 1.3rem;
     }
     
-    &.active button {
+    &:hover button {
         visibility: visible;
-        transform: translateX(0);
     }
+
+    &:hover button:hover {
+        color: red;
+    }
+
+
 `
 
 const addedWord = props => {
 
     return (
-        <StyledAddWord 
-            onMouseEnter={props.mouseEntered} 
-            onMouseLeave={props.mouseLeaved}
-            className={props.checkHover ? 'active' : null}>
+        <StyledAddWord>
             <span>
                 <p>{props.word}</p>
             </span>
@@ -63,7 +63,7 @@ const addedWord = props => {
                 <p>{props.meaning}</p>
             </span>
             <button onClick={props.clicked} type='button'>
-                X
+                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
             </button>
         </StyledAddWord>
     )

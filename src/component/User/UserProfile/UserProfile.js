@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { SwapLeftOutlined } from '@ant-design/icons';
+
 
 import Logo from '../../UI/Logo/Logo';
 import Button from '../../UI/Button/Button';
 import UserIcon from '../../UI/UserIcon/UserIcon';
 
 const StyledProfile = styled.div`
+    position: relative;
     display: block;
     width: 33rem;
     background-color: white;
@@ -55,12 +58,9 @@ const StyledProfile = styled.div`
             text-align: center;
         }
     
-        & input {
-            margin: 0.9rem;
-        }
-    
-        & input {
+        & > input {
             font-size: 1rem;
+            margin: 0.9rem;
             width: 80%;
             padding: 10px;
             border: none;
@@ -85,7 +85,11 @@ const userProfile = props => {
         <Logo></Logo>
         <StyledProfile>
             <form onSubmit={props.profileSubmitted}>
-                <UserIcon style={{width: '30%'}}/>
+                <SwapLeftOutlined style={{fontSize: '2rem', position: 'absolute', right: '5%', top: '5%'}}/>    
+                <div className='userIcon'>
+                    <UserIcon width='10rem' height='10rem' profilePic={props.profilePic}/>
+                    <input type='file' name='fileSelector' onChange={props.photoChanged}/>
+                </div>
                 <input 
                     type="text" 
                     name="nickname" 
