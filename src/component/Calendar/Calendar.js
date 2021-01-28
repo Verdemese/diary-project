@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from 'styled-components';
+import Context from '../../context/context';
 
 import CalendarNumber from './CalendarNumber/CalendarNumber';
 import TheDayOfTheWeek from './TheDayOfTheWeek/TheDayOfTheWeek';
@@ -20,14 +21,20 @@ const StyledCalendar = styled.div`
 const TodayButton = styled.button`
     border: none;
     padding: 0.3rem;
-    background: #34eb83;
-    color: black;
+    width: 4rem;
+    background: #009B77;
+    font-size: inherit;
+    color: white;
     border-radius: 10px;
-    right: 10%;
+    bottom: 1%;
+    right: 1%;
     position: absolute;
+    cursor: pointer;
 `
 
-const calendar = props => {
+const Calendar = props => {
+
+    const context = useContext(Context);
 
     const datesDetail = props.datesDetail
         .map(date => {
@@ -41,19 +48,30 @@ const calendar = props => {
                 //dayOfTheWeek = 0, 1, 2 ... 6 grid에서 0은 작동하지 않는다.
         });
     
+    console.log(context);
+
     return (
-        <div style={{width: '32rem', margin: 'auto', marginTop: '3rem'}}>
+        <div style={
+            {
+                width: '32rem',
+                margin: 'auto',
+                marginTop: '3rem',
+                padding: '0.5rem',
+                boxShadow: '0 1px 5px rgba(0, 0, 0, 0.3)'
+            }
+            }>
             <ChangeDate 
                 prevClicked={props.previousMonth}
                 nextClicked={props.nextMonth}
-                month={props.selectedMonth}/>
+                month={props.selectedMonth}
+                datesDetail={props.datesDetail}/>
             <TheDayOfTheWeek />
             <StyledCalendar>
                 {datesDetail}
             </StyledCalendar>
-            <TodayButton onClick={props.todayClicked}><p>Today: {props.today}</p></TodayButton>
+            <TodayButton onClick={props.todayClicked}><p>Today</p></TodayButton>
         </div>
     )
 }
 
-export default calendar;
+export default Calendar;

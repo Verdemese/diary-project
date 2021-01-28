@@ -5,7 +5,7 @@ const StyledSpan = styled.span`
     vertical-align: baseline;
     text-align: left;
     padding: 0.5rem;
-    height: 4.8rem;
+    height: 4.4rem;
     cursor: pointer;
 
     &:first-child {
@@ -18,16 +18,13 @@ const StyledSpan = styled.span`
     }
 
     &.red {
-        background-color: rgba(255,0,0, 0.4)
+        background-color: #D65076;
     }
     &.yellow {
-        background-color: rgba(255, 255, 0, 0.4)
+        background-color: RGB(239, 192, 40);
     }
     &.green {
-        background-color: rgba(0,128,0, 0.4)
-    }
-    &.blue {
-        background-color: rgba(0,0,255, 0.4)
+        background-color: #009B77;
     }
 `
 

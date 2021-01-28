@@ -3,10 +3,27 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore, combineReducers } from 'redux';
+
+import userReducer from './store/reducers/userReducer';
+import UIreducer from './store/reducers/UIreducer';
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  ui: UIreducer
+});
+
+const store = createStore(rootReducer);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store} >
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

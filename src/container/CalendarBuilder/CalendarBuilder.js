@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import axios from '../../aixos-wordsDate'
+import Context from '../../context/context';
+import { connect } from 'react-redux';
 
 import Calendar from '../../component/Calendar/Calendar';
 import Modal from '../../component/UI/Modal/Modal';
@@ -57,6 +59,7 @@ class CalendarControl extends Component {
 
     //처음 render했을 때
     componentDidMount() {
+
         const today = new Date();
         const year = today.getFullYear();
         const month = today.getMonth();
@@ -94,7 +97,7 @@ class CalendarControl extends Component {
 
 
         //추후 변경
-        axios.get(`/${this.props.userUID}/${year}/${month}.json`)
+        axios.get(`/${this.props.userData.uid}/${year}/${month}.json`)
             .then(response => {
                 for (let key in response.data) {
                     if (response.data[key].year === year && response.data[key].month === month) {
@@ -114,28 +117,31 @@ class CalendarControl extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
+
+        if (document.querySelector('input[name="word"]') || document.querySelector('input[name="meaning"]')) {
+            document.querySelector('input[name="word"]').value = '';
+            document.querySelector('input[name="meaning"]').value = '';
+            document.querySelector('input[name="word"]').focus();
+        }
+
         if (prevState.year !== this.state.year || prevState.month !== this.state.month) {
             let updatedDetail;
 
-            axios.get(`/${this.props.userUID}/${this.state.year}/${this.state.month}.json`)
+            axios.get(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`)
                 .then(response => {
                     for (let key in response.data) {
-                        if (response.data[key].year === this.state.year && response.data[key].month === this.state.month) {
-                            updatedDetail = [...response.data[key].datesDetail];
+                        updatedDetail = [...response.data[key].datesDetail];
 
-                            updatedDetail.forEach(date => {
-                                if (!date.words) {
-                                    date.words = [];
-                                }
-                            });
+                        updatedDetail.forEach(date => {
+                            if (!date.words) {
+                                date.words = [];
+                            }
+                        });
 
-                            this.setState({ datesDetail: updatedDetail });
-                        }
+                        this.setState({ datesDetail: updatedDetail });
                     }
                 })
         }
-
-        return prevState !== this.state;
     }
 
 
@@ -218,18 +224,31 @@ class CalendarControl extends Component {
 
 
 
+
+    //오늘로 이동
+    moveToTodayHandler = () => {
+
+        const today = { ...this.state.today };
+
+        this.setState({
+            year: today.year,
+            month: today.month
+        });
+    }
+
+
+
+
     //특정 date를 클릭했을 때 
     selectDateHandler = (inputDate) => {
 
-        document.querySelector('input[name="word"]').value = '';
-        document.querySelector('input[name="meaning"]').value = '';
 
         this.setState({ modalOpened: true });
 
         const date = [...this.state.datesDetail]
             .find(date => date === inputDate);
 
-        this.setState({ selectedDate: date, savedDate: date });
+        this.setState({ selectedDate: date, savedDate: date, deleteContainer: date });
     }
 
 
@@ -248,8 +267,6 @@ class CalendarControl extends Component {
         const datesDetail = [...this.state.datesDetail];
 
         const updateMonth = {
-            year: this.state.year,
-            month: this.state.month,
             datesDetail: datesDetail
         }
 
@@ -291,10 +308,10 @@ class CalendarControl extends Component {
 
         const index = datesDetail
             .findIndex(date => date.id === savedDate.id);
-        
+
         datesDetail[index] = savedDate;
 
-        axios.post(`/${this.props.userUID}/${this.state.year}/${this.state.month}.json`, updateMonth)
+        axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, updateMonth)
             .then(response => {
                 this.setState({
                     datesDetail: datesDetail,
@@ -304,11 +321,6 @@ class CalendarControl extends Component {
             })
             .catch(error => console.log(error));
 
-        //input value를 초기화함
-        words.forEach((word, index) => {
-            meanings[index].value = ''
-            word.value = '';
-        });
     }
 
 
@@ -323,10 +335,6 @@ class CalendarControl extends Component {
             word: '',
             meaning: ''
         };
-
-        //if (this.state.selectedDate.words) {
-        //    words = [...this.state.selectedDate.words];
-        //}
 
         inputBoxes.push(addWord);
 
@@ -351,44 +359,30 @@ class CalendarControl extends Component {
     // saved된 date에서 word를 삭제할 때 
     deleteSavedWordHandler = (word) => {
         let savedDate = { ...this.state.savedDate };
+        const datesDetail = [...this.state.datesDetail];
+
+        const index = datesDetail.findIndex(date => date === savedDate);
 
         const deleteWord = savedDate.words.findIndex(item => item === word);
 
         savedDate.words.splice(deleteWord, 1);
 
-        this.setState({ savedDate: savedDate });
+        datesDetail[index] = { ...datesDetail[index], ...savedDate }
+
+        axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, {
+            datesDetail: datesDetail
+        })
+            .then(response => {
+                this.setState({
+                    datesDetail: datesDetail,
+                    savedDate: savedDate
+                });
+            })
+            .catch(error => console.log(error));
+
+
     }
 
-
-
-    //save된 word box에서 마우스가 들어올 때
-    wordEnterHandler = (word) => {
-        const savedDate = { ...this.state.savedDate };
-
-        const checkHover = savedDate.words.findIndex(item => item === word);
-
-        savedDate.words[checkHover].hovered = true;
-
-        this.setState({ savedDate: savedDate });
-    }
-
-
-
-    //save된 word box에서 마우스가 나갈때
-    wordLeaveHandler = (word) => {
-        const savedDate = { ...this.state.savedDate };
-
-        const checkHover = savedDate.words.findIndex(item => item === word);
-
-        savedDate.words[checkHover].hovered = false;
-
-        this.setState({ savedDate: savedDate });
-    }
-
-
-
-    //오늘 날짜로 이동
-    moveToTodayHandler
 
 
     render() {
@@ -403,47 +397,58 @@ class CalendarControl extends Component {
 
         let amountOfSavedWords;
 
-        if (this.state.savedDate.words){
+        if (this.state.savedDate.words) {
             amountOfSavedWords = this.state.savedDate.words.length;
         }
 
         return (
-            <>
-                <Modal
-                    modalOpened={this.state.modalOpened}
-                    cancelModal={this.closeModalHandler}>
-                    <WordContainer
-                        clickedDate={selectedDate}
-                        cancelModal={this.closeModalHandler}
-                        dayOfTheWeek={dayOfTheWeek}
-                        amountOfSavedWords={amountOfSavedWords}
+            <Context.Provider value={{
+                datesDetail: this.state.datesDetail,
+                today: this.state.today
+            }} >
+                <>
+                    <Modal
+                        modalOpened={this.state.modalOpened}
+                        cancelModal={this.closeModalHandler}>
+                        <WordContainer
+                            clickedDate={selectedDate}
+                            cancelModal={this.closeModalHandler}
+                            dayOfTheWeek={dayOfTheWeek}
+                            amountOfSavedWords={amountOfSavedWords}
 
-                        //input 상태의 word box
-                        clicked={event => this.addWordHandler(event)}
-                        deleteWord={this.deleteWordHandler}
-                        words={this.state.inputBoxes}
+                            //input 상태의 word box
+                            clicked={event => this.addWordHandler(event)}
+                            deleteWord={this.deleteWordHandler}
+                            words={this.state.inputBoxes}
 
-                        //save된 word box
-                        savedWords={this.state.savedDate.words}
-                        deleteSavedWord={this.deleteSavedWordHandler}
-                        mouseEntered={this.wordEnterHandler}
-                        mouseLeaved={this.wordLeaveHandler}
+                            //save된 word box
+                            savedWords={this.state.savedDate.words}
+                            deleteSavedWord={this.deleteSavedWordHandler}
+                            mouseEntered={this.wordEnterHandler}
+                            mouseLeaved={this.wordLeaveHandler}
 
-                        //save 버튼
-                        submitted={(event) => this.saveHandler(event)} />
-                </Modal>
-                <Calendar
-                    today={today}
-                    todayClicked={this.moveToTodayHandler}
-                    selectedDate={this.selectDateHandler}
-                    nextMonth={this.nextMonthHandler}
-                    previousMonth={this.previousMonthHandler}
-                    datesDetail={this.state.datesDetail}
-                    selectedMonth={selectedMonth} />
-            </>
+                            //save 버튼
+                            submitted={(event) => this.saveHandler(event)} />
+                    </Modal>
+                    <Calendar
+                        today={today}
+                        selectedDate={this.selectDateHandler}
+                        nextMonth={this.nextMonthHandler}
+                        previousMonth={this.previousMonthHandler}
+                        datesDetail={this.state.datesDetail}
+                        selectedMonth={selectedMonth}
+                        todayClicked={this.moveToTodayHandler} />
+                </>
+            </Context.Provider>
         )
     }
 
 }
 
-export default CalendarControl;
+const mapStateToProps = state => {
+    return {
+        userData: state.user.userData
+    }
+}
+
+export default connect(mapStateToProps, null)(CalendarControl);

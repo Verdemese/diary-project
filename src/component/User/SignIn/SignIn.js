@@ -9,8 +9,9 @@ const StyledSignIn = styled.div`
     width: 33rem;
     background-color: white;
     height: 26rem;
-    margin: auto;
-    border-radius: 40px;
+    margin: 2rem auto;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 
     & > form {
         display: flex;

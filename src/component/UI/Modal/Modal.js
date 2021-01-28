@@ -9,9 +9,9 @@ const Modal = styled.div`
     z-index: 500;
     left: 50%;
     top: 20%;
-    border-radius: 10px;
+    border-radius: 5px;
     transform: translateX(-50%);
-    box-shadow: 1px 1px 1px black;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
     width: 27rem;
     height: 30rem;
     margin: auto;
@@ -48,4 +48,4 @@ const modal = props => {
     )
 }
 
-export default modal;
+export default React.memo(modal);

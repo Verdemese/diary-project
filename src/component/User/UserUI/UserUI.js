@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 import UserIcon from '../UserIcon/UserIcon';
-import Dropdown from '../Dropdown/Dropdown';
+import Dropdown from '../../UI/Dropdown/Dropdown';
 
 const StyledUserUI = styled.div`
-    cursor: pointer;    
+    cursor: pointer;
+    background: white;
 
     & .userUI__container {
         position: relative;
@@ -23,28 +24,36 @@ const StyledUserUI = styled.div`
         margin: 0 1rem;
         z-index: 50;
     }
+
+    & .toggle_dropdown {
+        font-size: 1rem;
+        cursor: pointer;
+    }
 `
 
 const userUI = props => {
 
-    const nickname = props.nickname || 'user';
+    const username = props.nickname || 'user';
 
     return (
-        <StyledUserUI >
+        <StyledUserUI className='userUI'>
             <div className='userUI__container'
-            onClick={props.profileClicked}>
+                onClick={props.profileClicked}>
                 <div className='userIcon'>
-                    <UserIcon width='2.5rem' height='2.5rem' profilePic={props.profilePic}/>
+                    <UserIcon width='2.5rem' height='2.5rem' profilePic={props.profilePic} />
                 </div>
-                <div style={{zIndex: '50'}}>
-                    <p>{nickname}▾</p>
+                <div style={{ zIndex: '50' }}>
+                    <button className='toggle_dropdown'><p>{username}▾</p></button>
                 </div>
-                <Dropdown 
+                <Dropdown
                     profileChangeClicked={props.profileChangeClicked}
-                    toggleDropdown={props.toggleDropdown} signOutClicked={props.signOut}></Dropdown>
+                    toggleDropdown={props.toggleDropdown} 
+                    signOutClicked={props.signOut}
+                    quizClicked={props.quizClicked}></Dropdown>
             </div>
         </StyledUserUI>
     );
 }
+
 
 export default userUI;

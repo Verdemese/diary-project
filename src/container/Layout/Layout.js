@@ -3,7 +3,6 @@ import React, { Component } from "react"
 class Layout extends Component {
 
     render () {
-
         return (
             <>
                 <main style={{paddingTop: '4rem'}}>

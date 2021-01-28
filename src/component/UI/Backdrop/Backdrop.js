@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components'
 
-const Backdrop = styled.div`
+const Backdrop = styled.button`
     position: fixed;
     z-index: 499;
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    right: 0;
     top: 0;
     visibility: hidden;
     opacity: 0;

@@ -82,12 +82,12 @@ const ButtonContainer = styled.div`
     }
 
     & button.save, button.plus {
-        background: #63e6be;
+        background: #009B77;
         color: white;
     }
     
     & button:hover {
-        background: rgb(99, 230, 139);
+        background: rgba(25,122,115);
     }
 `
 

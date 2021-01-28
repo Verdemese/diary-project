@@ -34,7 +34,8 @@ const defaultUserIcon = props => (
             width={props.width}
             height={props.height}
             src={props.profilePic ? props.profilePic : userIcon} 
-            alt='userIcon' />
+            alt='userIcon' 
+            accept='image/*'/>
     </ImageContainer>
 )
 

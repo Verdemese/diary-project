@@ -1,26 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link, Redirect } from 'react-router-dom';
 
-const StyledDropdown = styled.ul`
+const StyledDropdown = styled.ul`   
+    .userUI:focus-within & {
+        max-height: 20rem;
+    }    
+
+    background: white;
     position: absolute;
     right: 0;
     top: 0;
-    background-color: white;
     overflow: hidden;
-    padding-top: 4rem;
+    margin-top: 4.1rem;
     z-index: 40;
     max-height: 0;
     width: 6rem;
     transition: all 0.2s ease-in;
     border-radius: 10px;
-
-    &.toggle {
-        max-height: 20rem;
-    }
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 
     & li {
         height: 2rem;
-        
     }
 
     & button {
@@ -40,10 +41,23 @@ const StyledDropdown = styled.ul`
 
 const dropdown = props => {
     return (
-        <StyledDropdown className={props.toggleDropdown ? 'toggle' : null}>
-            <li><button onClick={props.profileChangeClicked} type='button'>profile</button></li>
-            <li><button type='button'>quiz</button></li>
-            <li><button onClick={props.signOutClicked} type='button'>sign-out</button></li>
+        //<StyledDropdown className={props.toggleDropdown ? 'toggle' : null}>
+        <StyledDropdown>
+            <li>
+                <Link to='profile'>
+                    <button type='button'>profile</button>
+                </Link>
+            </li>
+            <li>
+                <Link to='quiz' >
+                    <button type='button'>quiz</button>
+                </Link>
+            </li>
+            <li>
+                <Link replace={true} to='/'>
+                    <button onClick={props.signOutClicked} type='button'>sign-out</button>
+                </Link>
+            </li>
         </StyledDropdown>
     );
 }
