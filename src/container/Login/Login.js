@@ -12,7 +12,6 @@ import {
 } from '../../store/user/userActionCreator';
 
 import {
-    userProfile,
     checkAuthentication
 } from '../../store/UI/UIactionCreators'
 
@@ -85,7 +84,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getUserData: (userData) => dispatch(storeUserData(userData)),
-        userProfile: (profile) => dispatch(userProfile(profile)),
+        //userProfile: (profile) => dispatch(userProfile(profile)),
         checkAuthentication: () => dispatch(checkAuthentication()),
         //getUserToken: (userToken) => dispatch(storeUserToken(userToken))
     }

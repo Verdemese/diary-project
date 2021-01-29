@@ -2,7 +2,6 @@ import * as actionTypes from '../UI/UIactionTypes';
 
 const initialState = {
     authenticated: false,
-    userProfile: {},
 }
 
 export default (state = initialState, action) => {
@@ -12,12 +11,6 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 authenticated: true
-            }
-        }
-        case (actionTypes.PROFILE): {
-            return {
-                ...state,
-                userProfile: action.profile
             }
         }
     }

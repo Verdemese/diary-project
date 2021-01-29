@@ -1,6 +1,5 @@
-import React, {useContext} from "react";
+import React from 'react';
 import styled from 'styled-components';
-import Context from '../../context/context';
 
 import CalendarNumber from './CalendarNumber/CalendarNumber';
 import TheDayOfTheWeek from './TheDayOfTheWeek/TheDayOfTheWeek';
@@ -32,9 +31,7 @@ const TodayButton = styled.button`
     cursor: pointer;
 `
 
-const Calendar = props => {
-
-    const context = useContext(Context);
+const calendar = props => {
 
     const datesDetail = props.datesDetail
         .map(date => {
@@ -47,8 +44,6 @@ const Calendar = props => {
                 active={date.checked} >{date.date}</CalendarNumber>
                 //dayOfTheWeek = 0, 1, 2 ... 6 grid에서 0은 작동하지 않는다.
         });
-    
-    console.log(context);
 
     return (
         <div style={
@@ -74,4 +69,4 @@ const Calendar = props => {
     )
 }
 
-export default Calendar;
+export default calendar;

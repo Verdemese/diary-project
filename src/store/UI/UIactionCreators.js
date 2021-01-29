@@ -6,13 +6,6 @@ export const isAuthenticated = () => {
     }
 }
 
-export const userProfile = (profile) => {
-    return {
-        type: actionTypes.PROFILE,
-        profile
-    }
-}
-
 export const checkAuthentication = () => {
     return {
         type: actionTypes.AUTHENTICATED

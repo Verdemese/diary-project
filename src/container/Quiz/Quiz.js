@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
-import Context from '../../context/context';
+import CalendarBuilder from '../CalendarBuilder/CalendarBuilder';
 import Modal from '../../component/UI/Modal/Modal';
 import Calendar from '../../component/Calendar/Calendar'
 import ChangeDate from '../../component/Calendar/ChangeDate/ChangeDate';
@@ -28,17 +29,16 @@ const StyledQuiz = styled.div`
 `
 const Quiz = props => {
 
-    const context = useContext(Context);
     const [modalOpened, setModalOpened] = useState(false);
 
-    console.log(context);
+    console.log(props);
 
     return (
         <>
             <Modal 
                 modalOpened={modalOpened}
                 cancelModal={() => setModalOpened(false)}>
-
+                
             </Modal>
             <StyledQuiz>
                 <div>
@@ -50,4 +50,10 @@ const Quiz = props => {
     )
 }
 
-export default Quiz;
+const mapStateToProps = state => {
+    return {
+        datesDetail: state.user.datesDetail
+    }
+}
+
+export default connect(mapStateToProps)(Quiz);

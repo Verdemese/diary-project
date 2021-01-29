@@ -2,7 +2,7 @@ import * as actionTypes from '../user/userActionTypes';
 
 const initialState = {
     userData: {},
-    userToken: null
+    datesDetail: []
 }
 
 export default (state = initialState, action) => {
@@ -13,10 +13,10 @@ export default (state = initialState, action) => {
                 userData: action.userData
             }
         }
-        case (actionTypes.USERTOKEN): {
+        case (actionTypes.DATES_DETAIL): {
             return {
                 ...state,
-                userToken: action.userToken
+                datesDetail: action.datesDetail
             }
         }
     }

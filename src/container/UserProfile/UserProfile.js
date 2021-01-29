@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import Logo from '../../component/UI/Logo/Logo';
 import Button from '../../component/UI/Button/Button';
-import UserIcon from '../../component/UI/UserIcon/UserIcon';
+import UserIcon from '../../component/User/UserIcon/UserIcon';
 
 const StyledProfile = styled.div`
     position: relative;

@@ -7,6 +7,11 @@ import Calendar from '../../component/Calendar/Calendar';
 import Modal from '../../component/UI/Modal/Modal';
 import WordContainer from '../../component/Calendar/WordsContainer/WordsContainer';
 
+import {
+    storeDatesDetail
+} from '../../store/user/userActionCreator';
+
+
 const DAY_OF_THE_WEEK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 const INPUTBOXES = [
@@ -111,7 +116,10 @@ class CalendarControl extends Component {
                         this.setState({ datesDetail: updatedDetail });
                     }
                 }
-            })
+            });
+
+        this.props.saveDatesDetail(this.props.userData.uid);
+        
     }
 
 
@@ -451,4 +459,10 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, null)(CalendarControl);
+const mapDispatchToProps = dispatch => {
+    return {
+        saveDatesDetail: (obj) => dispatch(storeDatesDetail(obj))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CalendarControl);
