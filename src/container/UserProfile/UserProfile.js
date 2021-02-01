@@ -11,7 +11,7 @@ import UserIcon from '../../component/User/UserIcon/UserIcon';
 const StyledProfile = styled.div`
     position: relative;
     display: block;
-    width: 33rem;
+    width: 30rem;
     background-color: white;
     height: 26rem;
     margin: 2rem auto;

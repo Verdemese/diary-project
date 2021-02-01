@@ -7,7 +7,7 @@ import Button from '../../component/UI/Button/Button';
 
 const StyledSignUp = styled.div`
     display: block;
-    width: 33rem;
+    width: 30rem;
     background-color: white;
     height: 26rem;
     margin: 2rem auto;

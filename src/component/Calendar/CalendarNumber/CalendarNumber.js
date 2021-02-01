@@ -26,6 +26,11 @@ const StyledSpan = styled.span`
     &.green {
         background-color: #009B77;
     }
+
+    @media (max-width: 599px) {
+        width: 100%;
+        height: 3.5rem;
+    }
 `
 
 const calendarNumber = props => {

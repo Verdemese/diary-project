@@ -7,6 +7,7 @@ const StyledChangeDateContainer = styled.div`
     color: white;    
     display: flex;
     align-items: center;
+    jusify-content: space-between;
     margin-bottom: 1.5rem;
 
     & button {
@@ -28,16 +29,27 @@ const StyledChangeDateContainer = styled.div`
     & > * {
         flex: auto;
     }
+
+    @media (max-width: 599px) {
+        margin-bottom: 0;
+
+    & button {
+        font-size: 2rem;
+        height: auto;
+        width: auto;
+    }
+    }
 `
 
 const changeDate = props => {
-
     return (
         <>
-            <StyledChangeDateContainer>
+            <StyledChangeDateContainer className='changeDate'>
                 <button onClick={props.prevClicked} type="button">{'<'}</button>
                 <h1>{props.month}</h1>
-                <Chart datesDetail={props.datesDetail}/>
+                <Chart 
+                    datesDetail={props.datesDetail}
+                    quizMethod={props.quizMethod} />
                 <button onClick={props.nextClicked} type="button">{'>'}</button>
             </StyledChangeDateContainer>
         </>

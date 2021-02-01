@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { connect } from 'react-redux';
+
 const StyledDaysContainer = styled.div`
     margin: auto;
     width: 100%;
@@ -9,6 +11,10 @@ const StyledDaysContainer = styled.div`
     background-color: white;
     border-bottom: 2px solid black;
     
+    & span {
+        text-transform: capitalize;
+    }
+
     & span:first-child {
         color: red;
     }
@@ -16,13 +22,15 @@ const StyledDaysContainer = styled.div`
     & span:last-child {
         color: grey;
     }
+
+    @media (max-width: 599px) {
+        font-size: 0.8rem;
+    }
 `
 
-const DAY_OF_THE_WEEK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-
 const theDayOfTheWeek = props => {
-    const days = DAY_OF_THE_WEEK.map(day => {
-        return <span key={day}>{day.toUpperCase()}</span>
+    const days = props.DAY_OF_THE_WEEK.map(day => {
+        return <span key={day}>{day}</span>
     })
 
     return (
@@ -32,4 +40,10 @@ const theDayOfTheWeek = props => {
     )
 }
 
-export default theDayOfTheWeek;
+const mapStateToProps = state => {
+    return {
+        DAY_OF_THE_WEEK: state.ui.DAY_OF_THE_WEEK
+    }
+}
+
+export default connect(mapStateToProps)(theDayOfTheWeek);

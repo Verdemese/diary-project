@@ -15,13 +15,13 @@ const StyledDropdown = styled.ul`
     margin-top: 4.1rem;
     z-index: 40;
     max-height: 0;
-    width: 6rem;
+    width: 8rem;
     transition: all 0.2s ease-in;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 
     & li {
-        height: 2rem;
+        height: 2.5rem;
     }
 
     & button {
@@ -30,11 +30,16 @@ const StyledDropdown = styled.ul`
         height: 100%;
         background-color: transparent;
         border: none;
+        font-size: 0.7rem;
     }
 
     & button:hover {
-        background: rgba(0, 0, 0, 0.3);
+        background: #0366d6;
         color: white;
+    }
+
+    @media (max-width: 599px) {
+        margin-top: 3.1rem;
     }
 
 `

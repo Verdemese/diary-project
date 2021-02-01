@@ -16,6 +16,10 @@ const StyledToolbar = styled.header`
     z-index: 100;
     display: flex;
     justify-content: space-evenly;
+
+    @media (max-width: 599px) {
+        height: 3rem;
+    }
 `
 
 const Toolbar = props => {

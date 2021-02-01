@@ -7,12 +7,17 @@ import Calendar from '../../component/Calendar/Calendar';
 import Modal from '../../component/UI/Modal/Modal';
 import WordContainer from '../../component/Calendar/WordsContainer/WordsContainer';
 
+//import {
+//    storeDatesDetail
+//} from '../../store/user/userActionCreator';
 import {
-    storeDatesDetail
-} from '../../store/user/userActionCreator';
+    saveDatesDetail,
+    storeDatesDetail,
+    loadToday,
+    nextMonth,
+    prevMonth
+} from '../../store/reducers/userReducer';
 
-
-const DAY_OF_THE_WEEK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 const INPUTBOXES = [
     {
@@ -20,6 +25,7 @@ const INPUTBOXES = [
         meaning: ''
     }
 ];
+
 
 class CalendarControl extends Component {
 
@@ -59,11 +65,13 @@ class CalendarControl extends Component {
 
         //load spinner
         isLoading: false,
+        activatedDelete: false,
     }
 
 
     //처음 render했을 때
     componentDidMount() {
+        this.props.loadToday();
 
         const today = new Date();
         const year = today.getFullYear();
@@ -81,17 +89,19 @@ class CalendarControl extends Component {
             dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                id: date + `${DAY_OF_THE_WEEK[dayOfTheWeek.getDay()]}`,
+                id: date + `${this.props.DAY_OF_THE_WEEK[dayOfTheWeek.getDay()]}`,
                 words: []
             }
 
             datesDetail.push(dateObejct[date]);
         }
 
+        this.props.datesDetailForClient(datesDetail);
+
         this.setState({
             year,
             month,
-            datesDetail: datesDetail,
+            //datesDetail: datesDetail,
             today: {
                 year,
                 month,
@@ -99,56 +109,70 @@ class CalendarControl extends Component {
             }
         });
 
+        this.props.storeDatesDetail({
+            uid: this.props.userData.uid,
+            year: year,
+            month: month
+        });
 
 
         //추후 변경
-        axios.get(`/${this.props.userData.uid}/${year}/${month}.json`)
-            .then(response => {
-                for (let key in response.data) {
-                    if (response.data[key].year === year && response.data[key].month === month) {
-                        updatedDetail = [...response.data[key].datesDetail];
-                        updatedDetail.forEach(date => {
-                            if (!date.words) {
-                                date.words = [];
-                            }
-                        });
+        //axios.get(`/${this.props.userData.uid}/${year}/${month}.json`)
+        //    .then(response => {
+        //        for (let key in response.data) {
+        //            if (response.data[key].year === year && response.data[key].month === month) {
+        //                updatedDetail = [...response.data[key].datesDetail];
+        //                updatedDetail.forEach(date => {
+        //                    if (!date.words) {
+        //                        date.words = [];
+        //                    }
+        //                });
 
-                        this.setState({ datesDetail: updatedDetail });
-                    }
-                }
-            });
+        //                this.setState({ datesDetail: updatedDetail });
+        //            }
+        //        }
+        //    });
 
-        this.props.saveDatesDetail(this.props.userData.uid);
-        
+
+
     }
 
 
 
     componentDidUpdate(prevProps, prevState) {
-
-        if (document.querySelector('input[name="word"]') || document.querySelector('input[name="meaning"]')) {
-            document.querySelector('input[name="word"]').value = '';
-            document.querySelector('input[name="meaning"]').value = '';
-            document.querySelector('input[name="word"]').focus();
+        
+        if (prevState.inputBoxes === this.state.inputBoxes) {
+            if (document.querySelector('input[name="word"]') || document.querySelector('input[name="meaning"]')) {
+                document.querySelector('input[name="word"]').value = '';
+                document.querySelector('input[name="meaning"]').value = '';
+                document.querySelector('input[name="word"]').focus();
+            }
         }
 
         if (prevState.year !== this.state.year || prevState.month !== this.state.month) {
-            let updatedDetail;
+            //let updatedDetail;
 
-            axios.get(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`)
-                .then(response => {
-                    for (let key in response.data) {
-                        updatedDetail = [...response.data[key].datesDetail];
+            //axios.get(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`)
+            //    .then(response => {
+            //        for (let key in response.data) {
+            //            updatedDetail = [...response.data[key].datesDetail];
 
-                        updatedDetail.forEach(date => {
-                            if (!date.words) {
-                                date.words = [];
-                            }
-                        });
+            //            updatedDetail.forEach(date => {
+            //                if (!date.words) {
+            //                    date.words = [];
+            //                }
+            //            });
 
-                        this.setState({ datesDetail: updatedDetail });
-                    }
-                })
+            //            this.setState({ datesDetail: updatedDetail });
+
+            //        }
+            //    })
+
+            this.props.storeDatesDetail({
+                uid: this.props.userData.uid,
+                year: this.state.year,
+                month: this.state.month
+            });
         }
     }
 
@@ -166,6 +190,8 @@ class CalendarControl extends Component {
             month = 0;
         }
 
+        //this.props.nextMonth();
+
         const lastDay = new Date(year, month + 1, 0);
         const datesDetail = [];
         const dateObejct = {}
@@ -177,17 +203,19 @@ class CalendarControl extends Component {
             dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
+                id: date + this.props.DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: []
             }
 
             datesDetail.push(dateObejct[date]);
         }
 
+        this.props.datesDetailForClient(datesDetail);
+
         this.setState({
             year: year,
             month: month,
-            datesDetail: datesDetail,
+            //datesDetail: datesDetail,
         });
     }
 
@@ -205,6 +233,8 @@ class CalendarControl extends Component {
             month = 11;
         }
 
+        //this.props.prevMonth();
+
         const lastDay = new Date(year, month + 1, 0);
         const datesDetail = [];
         const dateObejct = {}
@@ -216,17 +246,19 @@ class CalendarControl extends Component {
             dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
+                id: date + this.props.DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: []
             }
 
             datesDetail.push(dateObejct[date]);
         }
 
+        this.props.datesDetailForClient(datesDetail);
+
         this.setState({
             year: year,
             month: month,
-            datesDetail: datesDetail,
+            //datesDetail: datesDetail,
         });
     }
 
@@ -250,10 +282,9 @@ class CalendarControl extends Component {
     //특정 date를 클릭했을 때 
     selectDateHandler = (inputDate) => {
 
-
         this.setState({ modalOpened: true });
 
-        const date = [...this.state.datesDetail]
+        const date = [...this.props.datesDetail]
             .find(date => date === inputDate);
 
         this.setState({ selectedDate: date, savedDate: date, deleteContainer: date });
@@ -263,7 +294,7 @@ class CalendarControl extends Component {
 
     //backdrop이나 modal을 닫을 때
     closeModalHandler = () => {
-        this.setState({ modalOpened: false, inputBoxes: INPUTBOXES });
+        this.setState({ modalOpened: false, inputBoxes: INPUTBOXES, activatedDelete: false });
     }
 
 
@@ -272,7 +303,7 @@ class CalendarControl extends Component {
     saveHandler = (event) => {
         event.preventDefault();
 
-        const datesDetail = [...this.state.datesDetail];
+        const datesDetail = [...this.props.datesDetail];
 
         const updateMonth = {
             datesDetail: datesDetail
@@ -307,7 +338,7 @@ class CalendarControl extends Component {
             obj.word = word.value;
             obj.meaning = meanings[index].value;
             obj.id = word.value + meanings[index].value;
-            obj.hovered = false;
+            obj.checked = false;
 
             container.push(obj);
         })
@@ -321,8 +352,11 @@ class CalendarControl extends Component {
 
         axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, updateMonth)
             .then(response => {
+
+                this.props.datesDetailForClient(datesDetail);
+
                 this.setState({
-                    datesDetail: datesDetail,
+                    //datesDetail: datesDetail,
                     savedDate: savedDate,
                     inputBoxes: INPUTBOXES
                 });
@@ -367,41 +401,49 @@ class CalendarControl extends Component {
     // saved된 date에서 word를 삭제할 때 
     deleteSavedWordHandler = (word) => {
         let savedDate = { ...this.state.savedDate };
-        const datesDetail = [...this.state.datesDetail];
+        const datesDetail = [...this.props.datesDetail];
 
-        const index = datesDetail.findIndex(date => date === savedDate);
+        const index = datesDetail.findIndex(date => date.id === savedDate.id);
 
-        const deleteWord = savedDate.words.findIndex(item => item === word);
+        const deleteWord = savedDate.words.find(item => item === word);
 
-        savedDate.words.splice(deleteWord, 1);
+        const words = savedDate.words.filter(words => words !== deleteWord);
 
-        datesDetail[index] = { ...datesDetail[index], ...savedDate }
+        datesDetail[index] = { ...datesDetail[index], words };
+
+        savedDate = { ...savedDate, words };
 
         axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, {
             datesDetail: datesDetail
         })
             .then(response => {
+                this.props.datesDetailForClient(datesDetail);
+
                 this.setState({
-                    datesDetail: datesDetail,
-                    savedDate: savedDate
+                    savedDate
                 });
             })
             .catch(error => console.log(error));
-
-
     }
 
+    activeMultipleDeleteHandler = () => {
+        this.setState({ activatedDelete: true });
+    }
+
+    cancelMultipleDeleteHandler = () => {
+        this.setState({ activatedDelete: false });
+    }
 
 
     render() {
 
         const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
 
-        const selectedDate = `${this.state.year}-${this.state.month + 1}-${this.state.selectedDate.date}`;
+        const selectedDate = `${this.state.month + 1}-${this.state.selectedDate.date}`;
 
         const today = `${this.state.today.year}-${this.state.today.month + 1}-${this.state.today.date}`;
 
-        const dayOfTheWeek = DAY_OF_THE_WEEK[this.state.selectedDate.dayOfTheWeek];
+        const dayOfTheWeek = this.props.DAY_OF_THE_WEEK[this.state.selectedDate.dayOfTheWeek];
 
         let amountOfSavedWords;
 
@@ -409,45 +451,46 @@ class CalendarControl extends Component {
             amountOfSavedWords = this.state.savedDate.words.length;
         }
 
+        console.log(this.state.activatedDelete);
+
+
         return (
-            <Context.Provider value={{
-                datesDetail: this.state.datesDetail,
-                today: this.state.today
-            }} >
-                <>
-                    <Modal
-                        modalOpened={this.state.modalOpened}
-                        cancelModal={this.closeModalHandler}>
-                        <WordContainer
-                            clickedDate={selectedDate}
-                            cancelModal={this.closeModalHandler}
-                            dayOfTheWeek={dayOfTheWeek}
-                            amountOfSavedWords={amountOfSavedWords}
+            <>
+                <Modal
+                    modalOpened={this.state.modalOpened}
+                    cancelModal={this.closeModalHandler}>
+                    <WordContainer
+                        clickedDate={selectedDate}
+                        cancelModal={this.closeModalHandler}
+                        dayOfTheWeek={dayOfTheWeek}
+                        amountOfSavedWords={amountOfSavedWords}
 
-                            //input 상태의 word box
-                            clicked={event => this.addWordHandler(event)}
-                            deleteWord={this.deleteWordHandler}
-                            words={this.state.inputBoxes}
+                        //input 상태의 word box
+                        clicked={event => this.addWordHandler(event)}
+                        deleteWord={this.deleteWordHandler}
+                        words={this.state.inputBoxes}
 
-                            //save된 word box
-                            savedWords={this.state.savedDate.words}
-                            deleteSavedWord={this.deleteSavedWordHandler}
-                            mouseEntered={this.wordEnterHandler}
-                            mouseLeaved={this.wordLeaveHandler}
+                        //save된 word box
+                        savedWords={this.state.savedDate.words}
+                        deleteSavedWord={this.deleteSavedWordHandler}
 
-                            //save 버튼
-                            submitted={(event) => this.saveHandler(event)} />
-                    </Modal>
-                    <Calendar
-                        today={today}
-                        selectedDate={this.selectDateHandler}
-                        nextMonth={this.nextMonthHandler}
-                        previousMonth={this.previousMonthHandler}
-                        datesDetail={this.state.datesDetail}
-                        selectedMonth={selectedMonth}
-                        todayClicked={this.moveToTodayHandler} />
-                </>
-            </Context.Provider>
+                        //save 버튼
+                        submitted={(event) => this.saveHandler(event)} 
+                        
+                        //delete 버튼
+                        activateDelete={this.state.activatedDelete}
+                        multipleDeleteClicked={this.activeMultipleDeleteHandler}
+                        multipleDeleteCanceled={this.cancelMultipleDeleteHandler}/>
+                </Modal>
+                <Calendar
+                    today={today}
+                    selectedDate={this.selectDateHandler}
+                    nextMonth={this.nextMonthHandler}
+                    previousMonth={this.previousMonthHandler}
+                    datesDetail={this.props.datesDetail}
+                    selectedMonth={selectedMonth}
+                    todayClicked={this.moveToTodayHandler} />
+            </>
         )
     }
 
@@ -455,13 +498,22 @@ class CalendarControl extends Component {
 
 const mapStateToProps = state => {
     return {
-        userData: state.user.userData
+        userData: state.user.userData,
+        datesDetail: state.user.datesDetail,
+        today: state.user.today,
+        dateForChange: state.user.dateForChange,
+
+        DAY_OF_THE_WEEK: state.ui.DAY_OF_THE_WEEK
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        saveDatesDetail: (obj) => dispatch(storeDatesDetail(obj))
+        storeDatesDetail: (obj) => dispatch(saveDatesDetail(obj)),
+        datesDetailForClient: (datesDetail) => dispatch(storeDatesDetail(datesDetail)),
+        loadToday: () => dispatch(loadToday()),
+        nextMonth: () => dispatch(nextMonth()),
+        prevMonth: () => dispatch(prevMonth())
     }
 }
 

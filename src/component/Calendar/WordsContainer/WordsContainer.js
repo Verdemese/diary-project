@@ -5,6 +5,13 @@ import AddWord from './Word/AddWord';
 import AddedWord from './Word/AddedWord';
 import plus from '../../../assets/plus-symbol.png';
 
+import closeIcon from '../../../assets/test.png';
+import clickedCloseIcon from '../../../assets/close-icon-clicked.png';
+import checkIcon from '../../../assets/check-icon.png';
+import clickedCheckIcon from '../../../assets/check-icon-clicked.png';
+import plusIcon from '../../../assets/plus-icon.png';
+import clickedPlusIcon from '../../../assets/plus-icon-clicked.png';
+
 const StyledWordsContainer = styled.form`
     width: 100%;
     left: 0;
@@ -17,6 +24,7 @@ const StyledWordsContainer = styled.form`
     padding-bottom: 4rem;
 
     & .day__info {
+        position: relative;
         margin: auto;
         width: 80%;
         padding-bottom: 0.5rem;
@@ -29,6 +37,7 @@ const StyledWordsContainer = styled.form`
 
     & .day__info h1, h3, h4 {
         margin: 0.7rem auto;
+        text-transform: capitalize;
     }
 
     & .button__container {
@@ -42,6 +51,33 @@ const StyledWordsContainer = styled.form`
         display: flex;
         justify-content: center;
     }
+
+    & .close {
+        position: fixed;
+        background: no-repeat center/100% url(${closeIcon});
+        width: 2rem;
+        aspect-ratio: 1;
+        right: 5%;
+        top: 5%;
+    }
+
+    & .close:active, & .close:hover {
+        position: fixed;
+        background: no-repeat center/100% url(${clickedCloseIcon});
+        width: 2rem;
+        aspect-ratio: 1;
+        right: 5%;
+        top: 5%;
+    }
+
+    & .edit {
+        position: absolute;
+        right: 5%;
+        bottom: 5%;
+    }
+
+
+    //scroll
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -60,6 +96,12 @@ const StyledWordsContainer = styled.form`
         width: 0;
         height: 0;
     }
+
+    @media (max-width: 599px) {
+        & .day__info h1, h3, h4 {
+            margin: 0.2rem auto;
+        }
+    }
 `
 
 const ButtonContainer = styled.div`
@@ -75,33 +117,48 @@ const ButtonContainer = styled.div`
 
     & button {
         width: 4rem;
-        height: 4rem;
+        aspect-ratio: 1;
         margin: 0 1rem;
         border-radius: 50%;
         border-color: transparent;
     }
 
-    & button.save, button.plus {
-        background: #009B77;
-        color: white;
+    & button.plus {
+        background: white no-repeat center/100% url(${plusIcon});
+    }
+
+    & button.plus:hover {
+        background: white no-repeat center/100% url(${clickedPlusIcon});
+    }
+
+    & button.save {
+        background: white no-repeat center/100% url(${checkIcon});
+    }
+
+    & button.save:hover {
+        background: white no-repeat center/100% url(${clickedCheckIcon});
     }
     
-    & button:hover {
-        background: rgba(25,122,115);
+  
+
+    @media (max-width: 599px) {
+        & button {
+            width: 3.4rem;
+        }
     }
 `
 
 
 const wordsContainer = props => {
-    
+
     let addWord;
 
     if (props.words) {
         addWord = props.words
             .map((word, index) => {
                 return <AddWord
-                        clicked={() => props.deleteWord(word)}
-                        key={index} />;
+                    clicked={() => props.deleteWord(word)}
+                    key={index} />;
             });
     }
 
@@ -111,19 +168,19 @@ const wordsContainer = props => {
         savedWords = props.savedWords
             .map((word, index) => {
 
+                const check = false;
+
                 if (word.word && word.meaning) {
                     return <AddedWord
-                            //mouse hover 이벤트
-                            mouseEntered={() => props.mouseEntered(word)}
-                            mouseLeaved={() => props.mouseLeaved(word)}
-                            checkHover={word.hovered}
+                        activatedDelete={props.activateDelete}
+                        checked={check}
 
-                            //saved word box
-                            clicked={() => props.deleteSavedWord(word)}
-                            word={word.word}
-                            meaning={word.meaning}
-                            key={index} />;
-                } 
+                        //saved word box
+                        clicked={() => props.deleteSavedWord(word)}
+                        word={word.word}
+                        meaning={word.meaning}
+                        key={index} />;
+                }
             });
     }
 
@@ -136,6 +193,16 @@ const wordsContainer = props => {
                 <h1>{props.clickedDate}</h1>
                 <h3>{props.dayOfTheWeek}</h3>
                 <h4>amount: {props.amountOfSavedWords}</h4>
+                <div className='edit' >
+                    <button 
+                        type='button'
+                        className='delete'
+                        onClick={props.multipleDeleteClicked}>delete</button>
+                    <button 
+                        type='button'
+                        className='cancel'
+                        onClick={props.multipleDeleteCanceled}>cancel</button>
+                </div>
             </div>
             <div style={{
                 display: 'flex',
@@ -148,19 +215,21 @@ const wordsContainer = props => {
                     width: '100%',
                     marginTop: '10px',
                 }}>
+
                     {savedWords}
                     {addWord}
                 </div>
             </div>
             <ButtonContainer>
-                <button className='save' type='submit'>save</button>
-                <button className='plus' type='click' onClick={props.clicked}>
+                <button className='save' type='submit'></button>
+                <button className='plus' type='button' onClick={props.clicked}>
                     <img style={{
                         width: '50%',
                         background: 'transparent',
                     }} src={plus} alt='+' />
                 </button>
-            </ButtonContainer> 
+            </ButtonContainer>
+            <button className='close' type='button' onClick={props.cancelModal} />
         </StyledWordsContainer>
     );
 }

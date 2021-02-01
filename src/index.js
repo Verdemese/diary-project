@@ -5,19 +5,27 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { configureStore } from '@reduxjs/toolkit'
-import thunk from 'redux-thunk';
+//import { createStore, combineReducers, applyMiddleware } from 'redux';
+//import thunk from 'redux-thunk';
 
 import userReducer from './store/reducers/userReducer';
 import UIreducer from './store/reducers/UIreducer';
 
-const rootReducer = combineReducers({
+//const rootReducer = combineReducers({
+//  user: userReducer,
+//  ui: UIreducer
+//});
+
+const reducer = {
   user: userReducer,
   ui: UIreducer
-});
+};
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = configureStore({
+  reducer,
+  middleware: getDefaultMiddleware => getDefaultMiddleware()
+});
 
 ReactDOM.render(
   <React.StrictMode>

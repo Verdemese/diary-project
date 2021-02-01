@@ -1,19 +1,22 @@
-import * as actionTypes from '../UI/UIactionTypes'; 
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-    authenticated: false,
-}
-
-export default (state = initialState, action) => {
-
-    switch (action.type) {
-        case (actionTypes.AUTHENTICATED): {
+export const UIslice = createSlice({
+    name: 'UI',
+    initialState: {
+        authenticated: false,
+        DAY_OF_THE_WEEK: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+    },
+    reducers: {
+        checkAuthentication: state => {
             return {
                 ...state,
-                authenticated: true
+                authenticated: !state.authenticated
             }
         }
     }
+});
 
-    return state;
-}
+export const { checkAuthentication } = UIslice.actions;
+
+export default UIslice.reducer;
+

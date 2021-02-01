@@ -6,7 +6,7 @@ import Button from '../../UI/Button/Button';
 
 const StyledSignIn = styled.div`
     display: block;
-    width: 33rem;
+    width: 30rem;
     background-color: white;
     height: 26rem;
     margin: 2rem auto;

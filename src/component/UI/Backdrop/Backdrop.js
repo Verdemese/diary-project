@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 
-const Backdrop = styled.button`
+const Backdrop = styled.div`
+    padding: 0;
     position: fixed;
     z-index: 499;
     overflow: hidden;
@@ -21,6 +22,7 @@ const Backdrop = styled.button`
 `
 
 const backdrop = props => {
+
     return (
         <Backdrop
             className={props.opened ? 'active' : null}

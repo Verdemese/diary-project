@@ -7,15 +7,12 @@ const StyledAddWord = styled.div`
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(196,199,255, 0.3);
 
     & span {
+        background: RGB(0, 155, 119, 0.15);
+        border-radius: 5px;
+        border: solid black 1px;
         width: 49%;
-    }
-
-    & span:first-child::after {
-        content: '';
-        border-right: 2px black dotted;
     }
 
     & p {
@@ -23,11 +20,6 @@ const StyledAddWord = styled.div`
         margin: 0;
         padding: 10px;
         display: inline-block;
-    }
-
-    & span:first-child > p::before {
-        margin-right: 10px;
-        content: '•';
     }
 
     & button {
@@ -49,13 +41,41 @@ const StyledAddWord = styled.div`
         color: red;
     }
 
+    & input[type="radio"] {
+        display: none;
+    }
+
+
+
+    // delete button을 눌렀을 때
+    &.delete_active button {
+        display: none;
+    }
+    
+    &.delete_active input[type="radio"] {
+        display: block;
+    }
+
+
+    @media (max-width: 599px) {
+        & span:first-child > p::before {
+            margin: none;
+            content: '';
+        }
+
+        & button {
+            visibility: visible;
+        }
+    }
 
 `
 
 const addedWord = props => {
 
+    const checked = props.checked;
+
     return (
-        <StyledAddWord>
+        <StyledAddWord className={props.activatedDelete ? 'delete_active' : null}>
             <span>
                 <p>{props.word}</p>
             </span>
@@ -65,6 +85,7 @@ const addedWord = props => {
             <button onClick={props.clicked} type='button'>
                 <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
             </button>
+            <input type='radio' checked/>
         </StyledAddWord>
     )
 }

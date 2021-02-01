@@ -24,6 +24,13 @@ const Modal = styled.div`
         visibility: visible;
         opacity: 1;
     }
+
+    @media (max-width: 599px) {
+        height: 85%;
+        top: 5%;
+        width: 95%;
+    }
+
 `
 
 const modal = props => {
