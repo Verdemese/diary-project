@@ -434,6 +434,33 @@ class CalendarControl extends Component {
         this.setState({ activatedDelete: false });
     }
 
+    selectMultipleHandler = (word) => {
+        const savedDate = { ...this.state.savedDate };
+
+        const selectedWord = savedDate.words.find(item => word === item);
+
+        const updatedWord = savedDate.words.map(word => {
+            if (word === selectedWord) {
+                return {
+                    ...word,
+                    check: !word.check
+                }
+            }
+        })
+
+        console.log(word);
+
+        this.setState(prevState => {
+            return {
+                savedDate: { 
+                    ...prevState.savedDate,
+                    words: updatedWord
+                 },
+            }
+        })        
+    }
+
+
 
     render() {
 
@@ -480,7 +507,8 @@ class CalendarControl extends Component {
                         //delete 버튼
                         activateDelete={this.state.activatedDelete}
                         multipleDeleteClicked={this.activeMultipleDeleteHandler}
-                        multipleDeleteCanceled={this.cancelMultipleDeleteHandler}/>
+                        multipleDeleteCanceled={this.cancelMultipleDeleteHandler}
+                        selectMultiple={this.selectMultipleHandler}/>
                 </Modal>
                 <Calendar
                     today={today}
