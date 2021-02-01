@@ -1,0 +1,3 @@
+[submodule "diary-project"]
+	path = diary-project
+	url = https://github.com/Verdemese/diary-project.git
