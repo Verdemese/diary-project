@@ -40,7 +40,7 @@ const StyledQuiz = styled.div`
 
 const Modal = styled.div`
     visibility: hidden;
-    position: fixed;
+    position: absolute;
     z-index: 500;
     left: 50%;
     width: 25rem;

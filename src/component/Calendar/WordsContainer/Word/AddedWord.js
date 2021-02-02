@@ -18,8 +18,9 @@ const StyledAddWord = styled.div`
     & p {
         width: 100%;
         margin: 0;
-        padding: 10px;
+        padding: 7px;
         display: inline-block;
+        word-break: break-word;
     }
 
     & button {
@@ -41,10 +42,12 @@ const StyledAddWord = styled.div`
         color: red;
     }
 
-    & input[type="radio"] {
+    & input[type="checkbox"] {
+        width: 0.8rem;
+        height: 0.8rem;
+        margin: 0.5rem;
         display: none;
     }
-
 
 
     // delete button을 눌렀을 때
@@ -52,7 +55,7 @@ const StyledAddWord = styled.div`
         display: none;
     }
     
-    &.delete_active input[type="radio"] {
+    &.delete_active input[type="checkbox"] {
         display: block;
     }
 
@@ -65,28 +68,37 @@ const StyledAddWord = styled.div`
 
         & button {
             visibility: visible;
+            width: auto;
+            font-size: 1.3rem;
         }
     }
 
 `
 
 const addedWord = props => {
-
-    const checked = props.checked;
-
     return (
-        <StyledAddWord className={props.activatedDelete ? 'delete_active' : null}>
-            <span>
-                <p>{props.word}</p>
-            </span>
-            <span>
-                <p>{props.meaning}</p>
-            </span>
-            <button onClick={props.clicked} type='button'>
-                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
-            </button>
-            <input type='radio' checked/>
-        </StyledAddWord>
+        <>
+            <label htmlFor={'wordCheckBox' + props.id} >
+                <StyledAddWord className={props.activatedDelete ? 'delete_active' : null}>
+                    <span>
+                        <p>{props.word}</p>
+                    </span>
+                    <span>
+                        <p>{props.meaning}</p>
+                    </span>
+                    <button onClick={props.clicked} type='button'>
+                        <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+                    </button>
+                    <input
+                        className='checkbox'
+                        type='checkbox'
+                        name='checkbox'
+                        id={'wordCheckBox' + props.id}
+                        onChange={props.checkboxClicked}
+                        checked={props.checked} />
+                </StyledAddWord>
+            </label>
+        </>
     )
 }
 

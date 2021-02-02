@@ -1,24 +1,38 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 
 const ChartContainer = styled.div`
 	display: block;	
 
+	& {
+		width: 5rem;
+		aspect-ratio: 1;
+	}
+
 	& canvas {
-		margin: auto;
+		margin: 0 auto;
 	}
 
 	@media (max-width: 599px) {
 		display: none;
 		position: absolute;
-		top: calc(100% + 30%);
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
+
+		.changeDate & {
+			display: block;
+		}
+
+		& {
+			width: 50%;
+		}
 
 		&.monthly {
 			display: block;
 		}
+
 	}
 `
 
@@ -36,8 +50,6 @@ const chart = props => {
 			if (amountWords > 0 && amountWords <= 10) red++;
 			if (amountWords > 10 && amountWords <= 20) yellow++;
 			if (amountWords > 20) green++;
-
-
 		})
 	}
 
@@ -58,8 +70,9 @@ const chart = props => {
 
 	const options = {
 		maintainAspectRatio: true,
-		responsive: false,
+		responsive: true,
 		legend: {
+			maxWidth: 100,
 			display: false,
 		},
 		tooltips: {
@@ -80,7 +93,7 @@ const chart = props => {
 					return label;
 				}
 			}
-		}
+		},
 	}
 
 	return (

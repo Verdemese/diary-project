@@ -4,7 +4,7 @@ class Layout extends Component {
     render () {
         return (
             <>
-                <main style={{paddingTop: '4rem'}}>
+                <main>
                     {this.props.children}
                 </main>
             </>            

@@ -40,7 +40,7 @@ const userUI = props => {
             <div className='userUI__container'
                 onClick={props.profileClicked}>
                 <div className='userIcon'>
-                    <UserIcon width='2.5rem' height='2.5rem' profilePic={props.profilePic} />
+                    <UserIcon location={'toolbar'} profilePic={props.profilePic} />
                 </div>
                 <div style={{ zIndex: '50' }}>
                     <button className='toggle_dropdown'><p>{username}▾</p></button>

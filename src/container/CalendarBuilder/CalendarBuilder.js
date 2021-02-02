@@ -140,33 +140,34 @@ class CalendarControl extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        
+
+        if (prevState.activatedDelete !== this.state.activatedDelete) {
+
+            const savedWords = [...this.state.savedDate.words];
+
+            const updatedWord = savedWords.map(word => {
+                return {
+                    ...word,
+                    checked: false
+                };
+            });
+
+            return this.setState({
+                savedDate: {
+                    ...this.state.savedDate,
+                    words: updatedWord
+                }
+            });
+        };
+
         if (prevState.inputBoxes === this.state.inputBoxes) {
             if (document.querySelector('input[name="word"]') || document.querySelector('input[name="meaning"]')) {
                 document.querySelector('input[name="word"]').value = '';
                 document.querySelector('input[name="meaning"]').value = '';
-                document.querySelector('input[name="word"]').focus();
             }
         }
 
         if (prevState.year !== this.state.year || prevState.month !== this.state.month) {
-            //let updatedDetail;
-
-            //axios.get(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`)
-            //    .then(response => {
-            //        for (let key in response.data) {
-            //            updatedDetail = [...response.data[key].datesDetail];
-
-            //            updatedDetail.forEach(date => {
-            //                if (!date.words) {
-            //                    date.words = [];
-            //                }
-            //            });
-
-            //            this.setState({ datesDetail: updatedDetail });
-
-            //        }
-            //    })
 
             this.props.storeDatesDetail({
                 uid: this.props.userData.uid,
@@ -294,7 +295,12 @@ class CalendarControl extends Component {
 
     //backdrop이나 modal을 닫을 때
     closeModalHandler = () => {
-        this.setState({ modalOpened: false, inputBoxes: INPUTBOXES, activatedDelete: false });
+
+        this.setState({
+            modalOpened: false,
+            inputBoxes: INPUTBOXES,
+            activatedDelete: false,
+        });
     }
 
 
@@ -317,7 +323,7 @@ class CalendarControl extends Component {
             meanings = [];
         };
 
-        //if (!words.value || !meanings.value) return;
+        if (!words.value || !meanings.value) return;
 
         if (!words.length || !meanings.length) { //array가 아닐 때
             words = [words];
@@ -359,6 +365,40 @@ class CalendarControl extends Component {
                     //datesDetail: datesDetail,
                     savedDate: savedDate,
                     inputBoxes: INPUTBOXES
+                });
+            })
+            .catch(error => console.log(error));
+
+    }
+
+
+    multipleDeleteHandler = () => {
+        const savedDate = { ...this.state.savedDate };
+        const datesDetail = [...this.props.datesDetail];
+
+        const updatedWords = savedDate.words.filter(word => !word.checked);
+
+        const updatedDetail = datesDetail.map(date => {
+            if (date.id === savedDate.id) {
+                return date = {
+                    ...date,
+                    words: updatedWords
+                }
+            }
+
+            return date;
+        });
+
+        axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, { datesDetail: updatedDetail })
+            .then(response => {
+
+                this.props.datesDetailForClient(updatedDetail);
+
+                this.setState({
+                    savedDate: {
+                        ...this.state.savedDate,
+                        words: updatedWords
+                    }
                 });
             })
             .catch(error => console.log(error));
@@ -427,14 +467,19 @@ class CalendarControl extends Component {
     }
 
     activeMultipleDeleteHandler = () => {
-        this.setState({ activatedDelete: true });
+        this.setState({ activatedDelete: true, inputBoxes:[]});
     }
 
     cancelMultipleDeleteHandler = () => {
-        this.setState({ activatedDelete: false });
+        const inputBoxes = [...this.state.inputBoxes, INPUTBOXES];
+
+        this.setState({ activatedDelete: false, inputBoxes: inputBoxes });
     }
 
     selectMultipleHandler = (word) => {
+
+        if (!this.state.activatedDelete) return;
+
         const savedDate = { ...this.state.savedDate };
 
         const selectedWord = savedDate.words.find(item => word === item);
@@ -443,23 +488,22 @@ class CalendarControl extends Component {
             if (word === selectedWord) {
                 return {
                     ...word,
-                    check: !word.check
-                }
+                    checked: !word.checked
+                };
             }
-        })
 
-        console.log(word);
+            return word;
+        })
 
         this.setState(prevState => {
             return {
-                savedDate: { 
+                savedDate: {
                     ...prevState.savedDate,
                     words: updatedWord
-                 },
+                },
             }
-        })        
+        });
     }
-
 
 
     render() {
@@ -477,9 +521,6 @@ class CalendarControl extends Component {
         if (this.state.savedDate.words) {
             amountOfSavedWords = this.state.savedDate.words.length;
         }
-
-        console.log(this.state.activatedDelete);
-
 
         return (
             <>
@@ -502,13 +543,14 @@ class CalendarControl extends Component {
                         deleteSavedWord={this.deleteSavedWordHandler}
 
                         //save 버튼
-                        submitted={(event) => this.saveHandler(event)} 
-                        
+                        submitted={(event) => this.saveHandler(event)}
+
                         //delete 버튼
                         activateDelete={this.state.activatedDelete}
                         multipleDeleteClicked={this.activeMultipleDeleteHandler}
                         multipleDeleteCanceled={this.cancelMultipleDeleteHandler}
-                        selectMultiple={this.selectMultipleHandler}/>
+                        selectMultiple={this.selectMultipleHandler}
+                        deleteConfirmed={this.multipleDeleteHandler} />
                 </Modal>
                 <Calendar
                     today={today}

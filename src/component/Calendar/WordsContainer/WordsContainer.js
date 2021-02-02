@@ -11,6 +11,7 @@ import checkIcon from '../../../assets/check-icon.png';
 import clickedCheckIcon from '../../../assets/check-icon-clicked.png';
 import plusIcon from '../../../assets/plus-icon.png';
 import clickedPlusIcon from '../../../assets/plus-icon-clicked.png';
+import binIcon from '../../../assets/bin-icon.svg';
 
 const StyledWordsContainer = styled.form`
     width: 100%;
@@ -77,6 +78,23 @@ const StyledWordsContainer = styled.form`
     }
 
 
+    & .edit.disable .delete {
+        display: none;
+    }
+
+    & .edit.disable .cancel {
+        display: block;
+    }
+
+    & .edit .cancel {
+        display: none;
+    }
+
+    & .edit .delete {
+        display: block;
+    }
+
+
     //scroll
 
     &::-webkit-scrollbar {
@@ -123,23 +141,34 @@ const ButtonContainer = styled.div`
         border-color: transparent;
     }
 
-    & button.plus {
+    &.disable .plus, &.disable .save {
+        display: none;
+    }
+
+    & .plus {
         background: white no-repeat center/100% url(${plusIcon});
     }
 
-    & button.plus:hover {
+    & .plus:hover {
         background: white no-repeat center/100% url(${clickedPlusIcon});
     }
 
-    & button.save {
+    & .save {
         background: white no-repeat center/100% url(${checkIcon});
     }
 
-    & button.save:hover {
+    & .save:hover {
         background: white no-repeat center/100% url(${clickedCheckIcon});
     }
     
-  
+    & .delete {
+        display: none;
+    }
+
+    &.disable .delete {
+        display: block;
+    }
+
 
     @media (max-width: 599px) {
         & button {
@@ -168,15 +197,15 @@ const wordsContainer = props => {
         savedWords = props.savedWords
             .map((word, index) => {
 
-                const check = false;
-
-                if (word.word && word.meaning) {
+                if (word.word && word.meaning ) {
                     return <AddedWord
                         activatedDelete={props.activateDelete}
-                        checked={check}
-
+                        checked={word.checked}
                         //saved word box
+                        
+                        id={word.id + index}
                         clicked={() => props.deleteSavedWord(word)}
+                        checkboxClicked={() => props.selectMultiple(word)}
                         word={word.word}
                         meaning={word.meaning}
                         key={index} />;
@@ -186,6 +215,8 @@ const wordsContainer = props => {
 
     //추후 정리
 
+    let disable = props.activateDelete ? 'disable' : null ;
+
     return (
         <StyledWordsContainer
             onSubmit={props.submitted}>
@@ -193,14 +224,14 @@ const wordsContainer = props => {
                 <h1>{props.clickedDate}</h1>
                 <h3>{props.dayOfTheWeek}</h3>
                 <h4>amount: {props.amountOfSavedWords}</h4>
-                <div className='edit' >
+                <div className={'edit ' + disable}>
                     <button 
                         type='button'
-                        className='delete'
+                        className={'delete'}
                         onClick={props.multipleDeleteClicked}>delete</button>
                     <button 
                         type='button'
-                        className='cancel'
+                        className={'cancel'}
                         onClick={props.multipleDeleteCanceled}>cancel</button>
                 </div>
             </div>
@@ -215,18 +246,18 @@ const wordsContainer = props => {
                     width: '100%',
                     marginTop: '10px',
                 }}>
-
                     {savedWords}
                     {addWord}
                 </div>
             </div>
-            <ButtonContainer>
+            <ButtonContainer className={disable}>
                 <button className='save' type='submit'></button>
                 <button className='plus' type='button' onClick={props.clicked}>
-                    <img style={{
-                        width: '50%',
-                        background: 'transparent',
-                    }} src={plus} alt='+' />
+                </button>
+                <button 
+                    className='save delete' 
+                    type='button' 
+                    onClick={props.deleteConfirmed}>
                 </button>
             </ButtonContainer>
             <button className='close' type='button' onClick={props.cancelModal} />

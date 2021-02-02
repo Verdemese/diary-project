@@ -44,25 +44,17 @@ const StyledProfile = styled.div`
     @media (max-width: 599px) {
         display: block;
         width: 100%;
-        background-color: white;
         height: 20rem;
         margin: auto;
-        border-radius: 0;
     
         & > form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             width: 90%;
             height: 100%;
-            margin: auto;
-            text-align: center;
         }
     
-        & > input {
+        & input {
             font-size: 1rem;
-            margin: 0.9rem;
+            margin: 0.5rem;
             width: 80%;
             padding: 10px;
             border: none;
@@ -73,14 +65,12 @@ const StyledProfile = styled.div`
 `
 
 const StyledButtonContainer = styled.div`
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     width: 100%;
     padding: 0 2rem;
     display: flex;
     justify-content: center;
 `
-
-
 
 const UserProfile = props => {
 
@@ -131,7 +121,7 @@ const UserProfile = props => {
             <StyledProfile>
                 <form onSubmit={event => submitProfileHandler(event)}>
                     <div className='userIcon'>
-                        <UserIcon width='10rem' height='10rem' profilePic={currentPic} />
+                        <UserIcon profilePic={currentPic} />
                         <input type='file' name='fileSelector' onChange={event => changePhotoHandler(event)} />
                     </div>
                     <input
