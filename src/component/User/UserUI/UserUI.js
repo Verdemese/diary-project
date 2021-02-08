@@ -17,11 +17,9 @@ const StyledUserUI = styled.div`
     }
 
     & .userIcon {
-        height: 1.5rem;
-        width: 1.5rem;
         display: flex;
         align-items: center;
-        margin: 0 1rem;
+        margin: 0;
         z-index: 50;
     }
 

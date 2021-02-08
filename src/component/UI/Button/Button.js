@@ -5,26 +5,26 @@ import styled from "styled-components";
 const StyledButton = styled.button`
     border: none;
     margin: 0.5rem;
-    padding: 1rem;
-    border-radius: 1rem;
+    padding: 0.7rem;
+    border-radius: 5px;
     text-align: center;
     width: 50%;
     color: white;
     cursor: pointer;
     background-color: rgba(229,145,180, 0.5);
 
-    &.sign-in, &.check {
+    &.sign-in, &.check, &.daily {
         background-color: #adcfd3;
     }
-    &.sign-in:active, &.check:active {
+    &.sign-in:active, &.check:active, &.daily:active {
         background-color: #8aa5a8;
     }
 
 
-    &.sign-up {
+    &.sign-up, &.monthly {
         background-color: #F2BAB8;
     }
-    &.sign-up:active {
+    &.sign-up:active, &.monthly:active {
         background-color: #d9a7a5;
     }
 
@@ -38,9 +38,9 @@ const StyledButton = styled.button`
 
 const button = props => (
     <StyledButton 
-        style={{background: props.backgroundColor}}
         onClick={props.clicked}
         type={props.buttonType} 
+        name={props.buttonName}
         className={props.funcType}>{props.children}</StyledButton>
 )
 

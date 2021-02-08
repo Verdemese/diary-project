@@ -4,7 +4,10 @@ class Layout extends Component {
     render () {
         return (
             <>
-                <main>
+                <main style={{
+                    width: '100%',
+                    height: '100%',
+                }}>
                     {this.props.children}
                 </main>
             </>            

@@ -51,15 +51,15 @@ const Toolbar = props => {
         });
     }
 
-    const moveToQuizHandler = () => {
-        props.history.push({
-            pathname: '/quiz'
-        })
-    }
+    //const moveToQuizHandler = () => {
+    //    props.history.push({
+    //        pathname: '/quiz'
+    //    })
+    //}
 
     return (
         <StyledToolbar>
-            <Logo />
+            <Logo notShow='notShow'/>
             <UserUI
                 profileClicked={toggleDropdownHandler}
                 toggleDropdown={toggleDropdown}

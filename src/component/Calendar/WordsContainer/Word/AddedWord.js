@@ -76,6 +76,14 @@ const StyledAddWord = styled.div`
 `
 
 const addedWord = props => {
+    let checked;
+    
+    if (props.checked === true || props.checked === false) {
+        checked = props.checked;
+    } else {
+        checked = false;
+    }
+
     return (
         <>
             <label htmlFor={'wordCheckBox' + props.id} >
@@ -95,7 +103,7 @@ const addedWord = props => {
                         name='checkbox'
                         id={'wordCheckBox' + props.id}
                         onChange={props.checkboxClicked}
-                        checked={props.checked} />
+                        checked={checked} />
                 </StyledAddWord>
             </label>
         </>

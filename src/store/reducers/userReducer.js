@@ -1,12 +1,17 @@
 import axios from '../../aixos-wordsDate';
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     today: {},
+    // { year, month }
     dateForChange: {},
+    // { year, month }
     userData: {},
+    // { uid }
     datesDetail: [],
+    // [{date, id, words}, ...]
     selectedDate: {},
+    // {date, id, words=[]}
 }
 
 export const userSlice = createSlice({
@@ -25,7 +30,7 @@ export const userSlice = createSlice({
                 userData: data
             }
         },
-        
+
         storeDatesDetail: (state, action) => {
             return {
                 ...state,
@@ -87,25 +92,27 @@ export const userSlice = createSlice({
             }
         },
 
-        dateSelected: (state, action) => {
+        selectDate: (state, action) => {
+
             return {
                 ...state,
                 selectedDate: {
-                    ...action.selectedDate,
-                    words: [...action.selectedDate.words]
+                    ...state.selectedDate,
+                    ...action.payload,
+                    words: [...action.payload.words]
                 }
             }
         }
     }
 })
 
-export const { 
-    storeUserData, 
+export const {
+    storeUserData,
     storeDatesDetail,
     storeToday,
     nextMonth,
     prevMonth,
-    dateSelected
+    selectDate
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -113,7 +120,7 @@ export default userSlice.reducer;
 export const loadToday = () => {
     return dispatch => {
         const today = new Date();
-        const year = today.getFullYear() * 1 ;
+        const year = today.getFullYear() * 1;
         const month = today.getMonth() * 1;
         const date = today.getDate() * 1;
 
@@ -122,9 +129,8 @@ export const loadToday = () => {
 }
 
 export const saveDatesDetail = (obj) => {
-    return async dispatch => {
-
-        await axios.get(`/${obj.uid}/${obj.year}/${obj.month}.json`)
+    return dispatch => {
+        axios.get(`/${obj.uid}/${obj.year}/${obj.month}.json`)
             .then(response => {
 
                 for (let key in response.data) {

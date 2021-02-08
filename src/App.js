@@ -10,6 +10,7 @@ import SignUp from './container/SignUp/SignUp';
 import Toolbar from './container/Toolbar/Toolbar';
 import Profile from './container/UserProfile/UserProfile';
 import Quiz from './container/Quiz/Quiz';
+import Daily from './container/Daily/Daily';
 
 class App extends React.Component {
 
@@ -22,7 +23,9 @@ class App extends React.Component {
           <Route path='/calendar' component={CalendarBuilder} />
           <Route path='/sign-up' component={SignUp} />
           <Route path='/profile' component={Profile} />
-          <Route path='/quiz' component={Quiz} />
+          <Route path='/quiz' exact component={Quiz} />
+          <Route path='/quiz/daily' component={Daily} />
+          {/*<Route path='/monthly' exact component={Quiz} />*/}
         </Layout>
       </div>
     );

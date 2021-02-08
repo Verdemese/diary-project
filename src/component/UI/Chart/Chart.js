@@ -1,6 +1,6 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import styled, { withTheme } from 'styled-components';
+import styled from 'styled-components';
 
 const ChartContainer = styled.div`
 	display: block;	
@@ -36,7 +36,7 @@ const ChartContainer = styled.div`
 	}
 `
 
-const chart = props => {
+const Chart = props => {
 
 	let [grey, red, yellow, green] = [1, 0, 0, 0];
 
@@ -58,7 +58,7 @@ const chart = props => {
 		datasets: [
 			{
 				backgroundColor: labelColor,
-				borderColor: 'white',
+				borderColor: 'rgb(255, 255, 255, 0.2)',
 				borderWidth: 1,
 				data: [grey, red, yellow, green],
 				scales: {
@@ -86,7 +86,7 @@ const chart = props => {
 						label = 'Start adding words!';
 					}
 
-					if (tooltipItem.index === 0 && data.datasets[0].data[tooltipItem.index] == 0) {
+					if (tooltipItem.index === 0 && data.datasets[0].data[tooltipItem.index] === 0) {
 						label = ''
 					}
 
@@ -102,6 +102,4 @@ const chart = props => {
 		</ChartContainer>
 	)
 }
-export default React.memo(chart, (prevProps, nextProps) => {
-	return prevProps.datesDetail === nextProps.datesDetail;
-});
+export default React.memo(Chart);

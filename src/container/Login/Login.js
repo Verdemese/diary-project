@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import firebase from "../../firebase";
 
 import SignIn from "../../component/User/SignIn/SignIn";
-import Spinner from '../../component/UI/Spinner/Spinner';
 
 //import {
 //    storeUserData,
@@ -68,15 +67,13 @@ class Login extends Component {
 
     render() {
 
-        let spinner = <Spinner />;
-
         //console.log(this.props);
 
         return (
             <>
                 <SignIn signInError={this.state.errorMessage}
                     signInSubmitted={(event) => this.signInHandler(event)}
-                    signUpClicked={this.changePageToSignUpHandler} />;
+                    signUpClicked={this.changePageToSignUpHandler} />
             </>
         );
     }

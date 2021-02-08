@@ -3,8 +3,6 @@ import firebase from '../../firebase';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-
-import Logo from '../../component/UI/Logo/Logo';
 import Button from '../../component/UI/Button/Button';
 import UserIcon from '../../component/User/UserIcon/UserIcon';
 
@@ -13,7 +11,8 @@ const StyledProfile = styled.div`
     display: block;
     width: 30rem;
     background-color: white;
-    height: 26rem;
+    max-height: auto;
+    padding: 10%;
     margin: 2rem auto;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
@@ -23,8 +22,6 @@ const StyledProfile = styled.div`
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 80%;
-        height: 100%;
         margin: auto;
         text-align: center;
     }
@@ -44,13 +41,9 @@ const StyledProfile = styled.div`
     @media (max-width: 599px) {
         display: block;
         width: 100%;
-        height: 20rem;
+        padding: 10%;
+        max-height: auto;
         margin: auto;
-    
-        & > form {
-            width: 90%;
-            height: 100%;
-        }
     
         & input {
             font-size: 1rem;
@@ -117,7 +110,6 @@ const UserProfile = props => {
 
     return (
         <>
-            <Logo></Logo>
             <StyledProfile>
                 <form onSubmit={event => submitProfileHandler(event)}>
                     <div className='userIcon'>

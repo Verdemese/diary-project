@@ -1,68 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import CalendarBuilder from '../CalendarBuilder/CalendarBuilder';
-import Backdrop from '../../component/UI/Backdrop/Backdrop';
-import Calendar from '../../component/Calendar/Calendar'
 import ChangeDate from '../../component/Calendar/ChangeDate/ChangeDate';
-import TheDayOfTheWeek from '../../component/Calendar/TheDayOfTheWeek/TheDayOfTheWeek'
+import TheDayOfTheWeek from '../../component/Calendar/TheDayOfTheWeek/TheDayOfTheWeek';
 import CalendarNumber from '../../component/Calendar/CalendarNumber/CalendarNumber';
+import Button from '../../component/UI/Button/Button';
+
+import Modal from '../../component/UI/Modal/Modal';
 
 import {
     nextMonth,
     prevMonth,
     saveDatesDetail,
     storeDatesDetail,
-} from '../../store/reducers/userReducer'
-import { render } from '@testing-library/react';
+    selectDate,
+    loadToday
+} from '../../store/reducers/userReducer';
 
 
 const StyledQuiz = styled.div`
     display: block;
     width: 30rem;
     background-color: white;
-    height: 26rem;
+    padding: 10%;
+    max-height: 26rem;
     margin: 2rem auto;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    & .quiz_method {
+        width: 100%;
+        display: flex;
+    }
+
+    & h3 {
+        text-align: center;
+    }
 
     @media (max-width: 599px) {
         display: block;
         width: 100%;
         background-color: white;
-        height: 20rem;
+        max-height: auto;
         margin: auto;
         border-radius: 0;
     }
 
-`
-
-const Modal = styled.div`
-    visibility: hidden;
-    position: absolute;
-    z-index: 500;
-    left: 50%;
-    width: 25rem;
-    height: auto;
-    top: 10%;
-    border-radius: 5px;
-    transform: translateX(-50%);
-    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
-    margin: auto;
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
-
-    &.opened {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    @media(max-width: 599px) {
-        width: 100%;
-        top: 5%;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-    }
 `
 
 const StyledCalendar = styled.div`
@@ -78,14 +69,13 @@ const StyledCalendar = styled.div`
 
 `
 
-const DAY_OF_THE_WEEK = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-
 class Quiz extends React.Component {
 
     state = {
         modalOpened: false,
         quizMethod: '',
         //details: []
+        message: ''
     }
 
     componentDidMount() {
@@ -106,6 +96,12 @@ class Quiz extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        //component가 unmount 될 때 dateForChange를 초기화 함.
+
+        this.props.loadToday();
+    }
+ 
     nextMonthHandler = () => {
         let year = this.props.dateForChange.year;
         let month = this.props.dateForChange.month + 1; //현재의 month에서 1을 더함
@@ -124,7 +120,7 @@ class Quiz extends React.Component {
             dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
+                id: date + this.props.DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: []
             }
 
@@ -153,7 +149,7 @@ class Quiz extends React.Component {
             dateObejct[date] = {
                 date,
                 dayOfTheWeek: dayOfTheWeek.getDay(),
-                id: date + DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
+                id: date + this.props.DAY_OF_THE_WEEK[dayOfTheWeek.getDay()],
                 words: []
             }
 
@@ -164,6 +160,10 @@ class Quiz extends React.Component {
         this.props.datesDetailForClient(datesDetail);
     }
 
+    closeModalHandler = () => {
+        this.setState({ modalOpened: false });
+    }
+
     dailyClickHandler = () => {
         this.setState({ modalOpened: true, quizMethod: 'daily' });
     }
@@ -172,22 +172,34 @@ class Quiz extends React.Component {
         this.setState({ modalOpened: true, quizMethod: 'monthly' });
     }
 
+    moveToDailyHandler = date => {
+        if (date.words.length > 0) {
+            this.props.selectDate(date);
+            this.props.history.push({
+                pathname: `/quiz/${this.state.quizMethod}/${this.props.dateForChange.month + 1}-${date.date}`
+            });
+        } else {
+            this.setState({ message: 'Add word first!' });
+        }
+    }
+
+    cancelHandler = () => {
+        this.props.history.goBack();
+    }
+
 
     render() {
 
         let dates = this.props.datesDetail.map(date => {
 
-            if (date.words.length > 0) console.log(1);
-
             return (
                 <CalendarNumber
                     id={date.id}
                     amountWords={date.words.length}
-                    //clicked={() => props.selectedDate(date)}
+                    clicked={() => this.moveToDailyHandler(date)}
                     key={date.dayOfTheWeek + date.date}
                     dayOfTheWeek={date.dayOfTheWeek + 1}>{date.date}</CalendarNumber>
             );
-            //dayOfTheWeek = 0, 1, 2 ... 6 grid에서 0은 작동하지 않는다.
         });
 
         let modal
@@ -195,46 +207,64 @@ class Quiz extends React.Component {
 
         if (this.state.quizMethod === 'daily') {
             modal = (
-                <Modal className={this.state.modalOpened ? 'opened' : null}>
+                <>
                     <ChangeDate
                         month={month}
                         prevClicked={this.prevMonthHandler}
                         datesDetail={this.props.datesDetail}
-                        nextClicked={this.nextMonthHandler} 
-                        quizMethod={this.state.quizMethod}/>
+                        nextClicked={this.nextMonthHandler}
+                        quizMethod={this.state.quizMethod} />
                     <TheDayOfTheWeek />
                     <StyledCalendar >
                         {dates}
                     </StyledCalendar>
-                </Modal>
+                    <button
+                        type='button'
+                        className='close'
+                        onClick={this.closeModalHandler} />
+                </>
             );
         } else if (this.state.quizMethod === 'monthly') {
             modal = (
-                <Modal className={this.state.modalOpened ? 'opened' : null}>
+                <>
                     <ChangeDate
                         month={month}
                         prevClicked={this.prevMonthHandler}
                         datesDetail={this.props.datesDetail}
-                        nextClicked={this.nextMonthHandler} 
-                        quizMethod={this.state.quizMethod}/>
-                </Modal>
-            )
+                        nextClicked={this.nextMonthHandler}
+                        quizMethod={this.state.quizMethod} />
+                    <button
+                        type='button'
+                        className='close'
+                        onClick={this.closeModalHandler} />
+                    <button
+                        type='button'
+                        className='check'
+                        onClick={this.closeModalHandler} />
+                </>
+            );
         }
 
         return (
             <>
+                <Modal
+                    classForQuiz='quiz'
+                    modalOpened={this.state.modalOpened}
+                    cancelModal={this.closeModalHandler}>
+                    {modal}
+                </Modal>
                 <StyledQuiz>
+                    <h3>Choose quiz method!</h3>
                     <div>
-                        <button type='button' onClick={this.dailyClickHandler}>daily</button>
-                        <button type='button' onClick={this.monthlyClickHandler}>monthly</button>
+                        <div className='quiz_method'>
+                            <Button buttonType='button' funcType='daily' clicked={this.dailyClickHandler}>daily</Button>
+                            <Button buttonType='button' funcType='monthly' clicked={this.monthlyClickHandler}>monthly</Button>
+                        </div>
+                        <Button buttonType='button' funcType='cancel' clicked={this.cancelHandler}>cancel</Button>
                     </div>
                 </StyledQuiz>
-                <Backdrop
-                    opened={this.state.modalOpened}
-                    clicked={() => this.setState({ modalOpened: false })} />
-                {modal}
             </>
-        )
+        );
     }
 
 }
@@ -244,7 +274,9 @@ const mapStateToProps = state => {
         today: state.user.today,
         datesDetail: state.user.datesDetail,
         userData: state.user.userData,
-        dateForChange: state.user.dateForChange
+        dateForChange: state.user.dateForChange,
+
+        DAY_OF_THE_WEEK: state.ui.DAY_OF_THE_WEEK
     }
 }
 
@@ -253,7 +285,9 @@ const mapDispatchToProps = dispatch => {
         datesDetailForClient: (obj) => dispatch(storeDatesDetail(obj)),
         saveDatesDetail: (obj) => dispatch(saveDatesDetail(obj)),
         nextMonth: () => dispatch(nextMonth()),
-        prevMonth: () => dispatch(prevMonth())
+        prevMonth: () => dispatch(prevMonth()),
+        selectDate: (obj) => dispatch(selectDate(obj)),
+        loadToday: () => dispatch(loadToday())
     }
 }
 

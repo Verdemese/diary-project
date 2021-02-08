@@ -40,9 +40,6 @@ const StyledUserIcon = styled.img`
 `
 
 const defaultUserIcon = props => {
-
-    console.log(props.location);
-
     return (
         <ImageContainer >
             <StyledUserIcon

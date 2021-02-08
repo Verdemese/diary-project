@@ -9,10 +9,10 @@ const StyledAddWord = styled.div`
     align-items: center;
 
     & input {
+        font-size: 0.8rem;
         transition: all 0.1s ease-out;
         width: 44%;
         border-radius: 5px;
-        font-size: 0.8rem;
         width: 100%;
         padding: 10px;
         border: 1px solid black;

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import AddWord from './Word/AddWord';
 import AddedWord from './Word/AddedWord';
-import plus from '../../../assets/plus-symbol.png';
 
 import closeIcon from '../../../assets/test.png';
 import clickedCloseIcon from '../../../assets/close-icon-clicked.png';
@@ -11,17 +10,15 @@ import checkIcon from '../../../assets/check-icon.png';
 import clickedCheckIcon from '../../../assets/check-icon-clicked.png';
 import plusIcon from '../../../assets/plus-icon.png';
 import clickedPlusIcon from '../../../assets/plus-icon-clicked.png';
-import binIcon from '../../../assets/bin-icon.svg';
 
 const StyledWordsContainer = styled.form`
-    width: 100%;
+    width: 27rem;
     left: 0;
-    height: 100%;
+    height: 30rem;
     border-radius: 20px;
     margin: auto;
     font-size: 1rem;
     overflow: auto;
-    background-color: white;
     padding-bottom: 4rem;
 
     & .day__info {
@@ -39,18 +36,6 @@ const StyledWordsContainer = styled.form`
     & .day__info h1, h3, h4 {
         margin: 0.7rem auto;
         text-transform: capitalize;
-    }
-
-    & .button__container {
-        width: inherit;
-        height: 4rem;
-        position: fixed;
-        border-radius: 10px;
-        background-color: white;
-        bottom: 0;
-        text-align: center;
-        display: flex;
-        justify-content: center;
     }
 
     & .close {
@@ -116,6 +101,10 @@ const StyledWordsContainer = styled.form`
     }
 
     @media (max-width: 599px) {
+        height: 100%;
+        width: 100%;
+        font-size: 0.9rem;
+
         & .day__info h1, h3, h4 {
             margin: 0.2rem auto;
         }
@@ -128,7 +117,6 @@ const ButtonContainer = styled.div`
     left: 0;
     transform: translateY(50%);
     width: 100%;
-    height: 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -210,6 +198,8 @@ const wordsContainer = props => {
                         meaning={word.meaning}
                         key={index} />;
                 }
+
+                return word;
             });
     }
 

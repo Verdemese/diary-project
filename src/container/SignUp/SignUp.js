@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import firebase from '../../firebase';
 
-import Logo from '../../component/UI/Logo/Logo';
 import Button from '../../component/UI/Button/Button';
 
 const StyledSignUp = styled.div`
     display: block;
     width: 30rem;
     background-color: white;
-    height: 26rem;
+    max-height: auto;
+    padding: 10%;
     margin: 2rem auto;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
@@ -19,8 +19,6 @@ const StyledSignUp = styled.div`
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 80%;
-        height: 100%;
         margin: auto;
         text-align: center;
     }
@@ -41,7 +39,6 @@ const StyledSignUp = styled.div`
         display: block;
         width: 100%;
         background-color: white;
-        height: 20rem;
         margin: auto;
         border-radius: 0;
     
@@ -50,8 +47,6 @@ const StyledSignUp = styled.div`
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 90%;
-            height: 100%;
             margin: auto;
             text-align: center;
         }
@@ -62,7 +57,6 @@ const StyledSignUp = styled.div`
     
         & input {
             font-size: 1rem;
-            width: 80%;
             padding: 10px;
             border: none;
             border-bottom: 1px solid black;
@@ -72,7 +66,6 @@ const StyledSignUp = styled.div`
 `
 
 const StyledButtonContainer = styled.div`
-    margin-top: 2rem;
     width: 100%;
     padding: 0 2rem;
     display: flex;
@@ -124,10 +117,9 @@ const SignUp = props => {
     }
 
     return (<>
-        <Logo></Logo>
         <StyledSignUp>
             <form onSubmit={errorHandler}>
-                <p>Sign-up</p>
+                <h3>Sign-up</h3>
                 <input
                     type="email"
                     name="email"

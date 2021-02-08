@@ -10,6 +10,10 @@ const LogoContainer = styled.div`
     align-items: center;
     justify-content: center;
 
+    & > p {
+        font-Size: 2rem;
+    }
+
     & img {
         width: 4rem;
         aspect-ratio: 1;
@@ -17,10 +21,9 @@ const LogoContainer = styled.div`
     }
 
     @media (max-width: 599px) {
+        //justify-content: flex-start;
 
-        justify-content: flex-start;
-
-        & p {
+        &.notShow p {
             display: none;
         }
         
@@ -32,12 +35,11 @@ const LogoContainer = styled.div`
 
 const logo = props => (
     <>
-        <LogoContainer>
+        <LogoContainer className={props.notShow}>
             <img src={logoIcon} alt='logo' />
             <p style={{
                 margin: '0',
                 textAlign: 'center',
-                fontSize: '2rem',
                 fontFamily: `Hachi Maru Pop, cursive`,
             }}>Engry</p>
         </LogoContainer>

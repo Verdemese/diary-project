@@ -10,7 +10,7 @@ const StyledChangeDateContainer = styled.div`
     align-items: center;
     jusify-content: space-between;
     margin-bottom: 1.5rem;
-    height: 100%;
+    margin-top: 1rem;
 
     & button {
         color: inherit;
@@ -25,7 +25,7 @@ const StyledChangeDateContainer = styled.div`
         background: rgba(0, 0, 0, 0.2);
     }
 
-    & h1 {
+    & h1, p {
         text-align: center;
     }
 
@@ -33,46 +33,71 @@ const StyledChangeDateContainer = styled.div`
         flex: auto;
     }
 
+    & .monthText_mobile {
+        display: none;
+    }
+
+    & .monthText_PC {
+        display: block;
+    }
+
     @media (max-width: 599px) {
-        margin-bottom: 1rem;
         height: 30vh;
 
         & button {
             font-size: 2rem;
         }
+
+        & .monthText_mobile {
+            display: block;
+        }
+
+        & .monthText_PC {
+            display: none;
+        }
+    }
+`
+
+const YearText = styled.div`
+    display: none;
+    margin: auto;
+    text-align: center;
+    margin: 0.5rem 0;
+
+    @media (max-width: 599px) {
+        display: block;
     }
 `
 
 const ChangeDate = props => {
 
     const [monthText, setMonthText] = React.useState('');
+    const [yearText, setYearText] = React.useState('');
 
     React.useEffect(() => {
-        const text = props.month;
 
-        if (window.innerWidth < 600) {
+        const [year, month] = props.month.split('-');
 
-            const [__, month] = text.split('-');
-            
-            return setMonthText(month);
-        }
+        setMonthText(month);
+        setYearText(year);
 
-        setMonthText(text);
-    }, [window.innerWidth, props.month]);
+    }, [props.month]);
 
     return (
         <>
             <StyledChangeDateContainer className='changeDate'>
                 <button onClick={props.prevClicked} type="button">{'<'}</button>
-                <h1>{monthText}</h1>
+                <h1 className='monthText_PC'>{props.month}</h1>
+                <h1 className='monthText_mobile'>{monthText}</h1>
                 <Chart 
                     month={props.month}
                     datesDetail={props.datesDetail}
                     quizMethod={props.quizMethod} />
                 <button onClick={props.nextClicked} type="button">{'>'}</button>
             </StyledChangeDateContainer>
+            <YearText>{yearText}</YearText>
         </>
     )
 }
 
-export default ChangeDate;
+export default React.memo(ChangeDate);
