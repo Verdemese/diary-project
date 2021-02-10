@@ -1,5 +1,6 @@
 import axios from '../../aixos-wordsDate';
 import { createSlice } from '@reduxjs/toolkit';
+import firebase from '../../firebase';
 
 const initialState = {
     today: {},
@@ -102,6 +103,16 @@ export const userSlice = createSlice({
                     words: [...action.payload.words]
                 }
             }
+        },
+
+        updateUserData: (state, action) => {
+            return {
+                ...state,
+                userData: {
+                    ...state.userData,
+                    profilePicture: action.payload
+                }
+            }
         }
     }
 })
@@ -112,7 +123,8 @@ export const {
     storeToday,
     nextMonth,
     prevMonth,
-    selectDate
+    selectDate,
+    updateUserData
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -129,24 +141,30 @@ export const loadToday = () => {
 }
 
 export const saveDatesDetail = (obj) => {
-    return dispatch => {
-        axios.get(`/${obj.uid}/${obj.year}/${obj.month}.json`)
+    return async dispatch => {
+
+        await axios.get(`/${obj.uid}/${obj.year}/${obj.month}.json`)
             .then(response => {
 
-                for (let key in response.data) {
-
-                    let updatedDetail = [];
-
-                    updatedDetail = [...response.data[key].datesDetail];
-                    updatedDetail.forEach(date => {
+                if (response.data) {
+                    const lastUpdate = response.data.datesDetail;
+                    lastUpdate.map(date => {
                         if (!date.words) {
                             date.words = [];
                         }
-                    });
-
-                    dispatch(storeDatesDetail(updatedDetail));
-
+                    })
+                    dispatch(storeDatesDetail(lastUpdate));
                 }
-            });
+            }
+            );
+    }
+}
+
+export const getProfilePictureFromStorage = (uid) => {
+    return async dispatch => {
+        const storage = firebase.storage();
+        await storage.ref('users/' + uid + '/profile.jpg')
+            .getDownloadURL()
+            .then(image => dispatch(updateUserData(image)));
     }
 }
