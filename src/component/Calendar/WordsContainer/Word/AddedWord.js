@@ -7,6 +7,8 @@ const StyledAddWord = styled.div`
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #ccc;
 
     & span {
         background: RGB(0, 155, 119, 0.15);

@@ -36,7 +36,7 @@ const TodayButton = styled.button`
     padding: 0.3rem;
     width: 4rem;
     height: 2rem;
-    background: #009B77;
+    background: #34568B;
     font-size: inherit;
     color: white;
     border-radius: 10px;
@@ -44,6 +44,12 @@ const TodayButton = styled.button`
     right: 1%;
     position: fixed;
     cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+
+    @media (max-width: 599px) {
+        top: calc(3rem + 1%);
+        left: 1%;
+    }
 `
 
 const calendar = props => {

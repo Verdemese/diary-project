@@ -9,29 +9,29 @@ import clickedCheckIcon from '../../../assets/check-icon-clicked.png';
 
 
 const Modal = styled.div`
-    visibility: hidden;
+    display: none;
     position: fixed;
     z-index: 500;
     width: 27rem;
     left: 50%;
-    top: 10%;
+    top: 13%;
     border-radius: 5px;
     transform: translateX(-50%);
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
     margin: auto;
     background-color: white;
     opacity: 0;
-    transition: opacity 0.3s ease-out;
+    transition: opacity 0.2s ease-out;
 
     &.opened {
-        visibility: visible;
+        display: block;
         opacity: 1;
     }
 
     //for quiz
 
     &.quiz {
-        visibility: hidden;
+        display: none;
         position: absolute;
         z-index: 500;
         left: 50%;
@@ -45,10 +45,11 @@ const Modal = styled.div`
         opacity: 0;
         transition: opacity 0.3s ease-out;
         background: transparent;
+        padding: 0.5rem;
     }
 
     &.quiz.opened {
-        visibility: visible;
+        display: block;
         opacity: 1;
     }
 

@@ -112,27 +112,6 @@ class CalendarBuilder extends Component {
             year: year,
             month: month
         });
-
-
-        //추후 변경
-        //axios.get(`/${this.props.userData.uid}/${year}/${month}.json`)
-        //    .then(response => {
-        //        for (let key in response.data) {
-        //            if (response.data[key].year === year && response.data[key].month === month) {
-        //                updatedDetail = [...response.data[key].datesDetail];
-        //                updatedDetail.forEach(date => {
-        //                    if (!date.words) {
-        //                        date.words = [];
-        //                    }
-        //                });
-
-        //                this.setState({ datesDetail: updatedDetail });
-        //            }
-        //        }
-        //    });
-
-
-
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -305,9 +284,7 @@ class CalendarBuilder extends Component {
         event.preventDefault();
 
         const datesDetail = [...this.props.datesDetail];
-
         const updateMonth = { datesDetail };
-
         let words = event.target.word;
         let meanings = event.target.meaning;
 
@@ -347,13 +324,12 @@ class CalendarBuilder extends Component {
 
         datesDetail[index] = savedDate;
 
-        axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, updateMonth)
+        axios.patch(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, updateMonth)
             .then(response => {
 
                 this.props.datesDetailForClient(datesDetail);
 
                 this.setState({
-                    //datesDetail: datesDetail,
                     savedDate: savedDate,
                     inputBoxes: INPUTBOXES
                 });
@@ -366,9 +342,7 @@ class CalendarBuilder extends Component {
     multipleDeleteHandler = () => {
         const savedDate = { ...this.state.savedDate };
         const datesDetail = [...this.props.datesDetail];
-
         const updatedWords = savedDate.words.filter(word => !word.checked);
-
         const updatedDetail = datesDetail.map(date => {
             if (date.id === savedDate.id) {
                 return date = {
@@ -380,7 +354,7 @@ class CalendarBuilder extends Component {
             return date;
         });
 
-        axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, { datesDetail: updatedDetail })
+        axios.patch(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, { datesDetail: updatedDetail })
             .then(response => {
 
                 this.props.datesDetailForClient(updatedDetail);
@@ -389,7 +363,8 @@ class CalendarBuilder extends Component {
                     savedDate: {
                         ...this.state.savedDate,
                         words: updatedWords
-                    }
+                    },
+                    activatedDelete: false
                 });
             })
             .catch(error => console.log(error));
@@ -440,7 +415,7 @@ class CalendarBuilder extends Component {
 
         savedDate = { ...savedDate, words };
 
-        axios.post(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, {
+        axios.patch(`/${this.props.userData.uid}/${this.state.year}/${this.state.month}.json`, {
             datesDetail: datesDetail
         })
             .then(response => {
@@ -495,6 +470,8 @@ class CalendarBuilder extends Component {
 
 
     render() {
+
+        console.log(this.props);
 
         const selectedMonth = `${this.state.year}-${this.state.month + 1}`;
         const selectedDate = `${this.state.month + 1}-${this.state.selectedDate.date}`;

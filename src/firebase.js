@@ -1,5 +1,7 @@
 import firebase from "firebase/app";
 
+import "firebase/database";
+import "firebase/storage";
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -21,5 +23,3 @@ if (!firebase.apps.length) {
 }
 
 export default firebase;
-
-//const ui = new firebaseui.auth.AuthUI(firebase.auth());

@@ -35,7 +35,7 @@ const resultItem = props => {
             <StyledList className='correct'>
                 <span>{props.correctAnswer.word}</span>
                 <span>{props.correctAnswer.meaning}</span>
-                <span>correct</span>
+                <span>{props.userAnswer.meaning + '(O)'}</span>
             </StyledList>
         );
     } else {

@@ -10,7 +10,6 @@ const StyledChangeDateContainer = styled.div`
     align-items: center;
     jusify-content: space-between;
     margin-bottom: 1.5rem;
-    margin-top: 1rem;
 
     & button {
         color: inherit;
@@ -61,6 +60,7 @@ const StyledChangeDateContainer = styled.div`
 const YearText = styled.div`
     display: none;
     margin: auto;
+    color: white;
     text-align: center;
     margin: 0.5rem 0;
 

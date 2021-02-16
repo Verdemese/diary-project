@@ -1,6 +1,5 @@
 import axios from '../../aixos-wordsDate';
 import { createSlice } from '@reduxjs/toolkit';
-import firebase from '../../firebase';
 
 const initialState = {
     today: {},
@@ -17,18 +16,16 @@ const initialState = {
 
 export const userSlice = createSlice({
     name: 'user',
-    initialState: initialState,
+    initialState,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     reducers: {
         storeUserData: (state, action) => {
-
-            const data = {
-                uid: action.payload
-            }
-
             return {
                 ...state,
-                userData: data
+                userData: {
+                    ...state.userData,
+                    uid: action.payload
+                }
             }
         },
 
@@ -113,6 +110,9 @@ export const userSlice = createSlice({
                     profilePicture: action.payload
                 }
             }
+        },
+        resetUserState: () => {
+            return initialState;
         }
     }
 })
@@ -124,7 +124,8 @@ export const {
     nextMonth,
     prevMonth,
     selectDate,
-    updateUserData
+    updateUserData,
+    resetUserState
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -152,19 +153,11 @@ export const saveDatesDetail = (obj) => {
                         if (!date.words) {
                             date.words = [];
                         }
+                        return date;
                     })
                     dispatch(storeDatesDetail(lastUpdate));
                 }
             }
             );
-    }
-}
-
-export const getProfilePictureFromStorage = (uid) => {
-    return async dispatch => {
-        const storage = firebase.storage();
-        await storage.ref('users/' + uid + '/profile.jpg')
-            .getDownloadURL()
-            .then(image => dispatch(updateUserData(image)));
     }
 }

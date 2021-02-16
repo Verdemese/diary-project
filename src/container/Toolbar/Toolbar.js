@@ -3,6 +3,9 @@ import firebase from '../../firebase';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
+import { resetUIState } from '../../store/reducers/UIreducer';
+import { resetUserState } from '../../store/reducers/userReducer';
+
 import Logo from '../../component/UI/Logo/Logo';
 import UserUI from '../../component/User/UserUI/UserUI';
 
@@ -24,25 +27,39 @@ const StyledToolbar = styled.header`
 
 const Toolbar = props => {
 
+
     const [toggleDropdown, setToggleDropdown] = useState(false);
     const [profilePic, setProfilePic] = useState(null);
     const [username, setUsername] = useState(null);
-    
+
     useEffect(() => {
         const user = firebase.auth().currentUser;
 
-        if (user){
-            setProfilePic(user.photoURL);
+        if (props.userData.uid) {
+            const storage = firebase.storage();
+            storage.ref('users/' + props.userData.uid + '/profile.jpg')
+                .getDownloadURL()
+                .then(image => setProfilePic(image));
+            
             setUsername(user.displayName);
         }
-    }, [profilePic, username]);
+    }, [props.userData]);
+
+    useEffect(() => {
+        setProfilePic(props.userProfile.profilePic);
+        setUsername(props.userProfile.displayName);
+    }, [props.userProfile]);
 
     const toggleDropdownHandler = () => {
         setToggleDropdown(prev => !prev);
     }
 
     const signOutHandler = () => {
-        firebase.auth().signOut();
+        firebase.auth().signOut()
+            .then(() => {
+                props.resetUserState();
+                props.resetUIState();
+            });
     }
 
     const moveToProfileHandler = () => {
@@ -50,12 +67,6 @@ const Toolbar = props => {
             pathname: '/profile'
         });
     }
-
-    //const moveToQuizHandler = () => {
-    //    props.history.push({
-    //        pathname: '/quiz'
-    //    })
-    //}
 
     return (
         <StyledToolbar>
@@ -66,16 +77,23 @@ const Toolbar = props => {
                 profilePic={profilePic}
                 profileChangeClicked={moveToProfileHandler}
                 signOut={signOutHandler}
-                nickname={username} 
-                quizClicked/>
+                nickname={username} />
         </StyledToolbar>
     )
 };
 
 const mapStateToProps = state => {
     return {
-        authenticated: state.ui.authenticated
+        userData: state.user.userData,
+        userProfile: state.ui.userProfile
     }
 }
 
-export default connect(mapStateToProps, null)(Toolbar);
+const mapDispatchToProps = dispatch => {
+    return {
+        resetUIState: () => dispatch(resetUIState()),
+        resetUserState: () => dispatch(resetUserState())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

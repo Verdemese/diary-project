@@ -13,7 +13,8 @@ const Backdrop = styled.div`
     visibility: hidden;
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.3);
-    transition: opacity 0.3s;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(10px);
     
     &.active {
         visibility: visible;

@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import firebase from '../../firebase';
+import { connect } from 'react-redux';
 
 import Button from '../../component/UI/Button/Button';
+
+import { storeUserData } from '../../store/reducers/userReducer';
+import { convertAuthentication } from '../../store/reducers/UIreducer';
 
 const StyledSignUp = styled.div`
     display: block;
     width: 30rem;
     background-color: white;
     max-height: auto;
-    padding: 10%;
+    padding: 5%;
     margin: 2rem auto;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
@@ -95,9 +99,14 @@ const SignUp = props => {
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(user => {
-                props.history.push({
-                    pathname: '/profile'
-                })
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        props.convertAuthentication();
+                        props.storeUserData(user.user.uid);
+                        props.history.push({
+                            pathname: '/profile'
+                        });
+                    });
             })
             .catch(error => {
                 if (error.code === 'auth/invalid-email') {
@@ -148,5 +157,17 @@ const SignUp = props => {
     </>)
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        storeUserData: (uid) => dispatch(storeUserData(uid)),
+        convertAuthentication: () => dispatch(convertAuthentication())
+    }
+}
 
-export default SignUp;
+const mapStateToProps = state => {
+    return {
+        authenticated: state.ui.authenticated
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

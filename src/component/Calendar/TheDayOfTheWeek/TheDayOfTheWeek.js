@@ -9,7 +9,7 @@ const StyledDaysContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     background-color: white;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid #34568B;
     
     & span {
         text-transform: capitalize;

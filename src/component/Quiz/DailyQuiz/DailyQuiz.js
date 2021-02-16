@@ -1,125 +1,82 @@
 import React from 'react'
 import styled from 'styled-components';
 
+import QuizPage from '../QuizPage/QuizPage';
+import ResultPage from '../ResultPage/ResultPage';
 import Button from '../../UI/Button/Button';
 
-const StyledQuiz = styled.div`
-    width: 100%;
+const StyledQuiz = styled.form`
+    position: relative;
+    width: 30rem;
+    background-color: white;
+    padding: 5%;
+    margin: 2rem auto;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
 
-    & div:not(.quiz_userInput):not(.result_page) {
-        padding: 1rem;
-        margin: 0.5rem 0;
+    & span {
+        position: absolute;
         border-radius: 5px;
+        right: 3%;
+        top: 3%;
+        padding: 1%;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
 
-    & .quiz_userInput {
-        margin: 0.5rem 0;
-        position: relative;
-    }
-
-    & input {
-        font-size: inherit;
-        padding: 0.7rem;
-        transition: all 0.1s ease-out;
-        border-radius: 5px;
-        width: 100%;
-        background-color: transparent;
+    & .quizButton_container {
+        width: 70%;
+        margin: auto;
         text-align: center;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    }
-
-    & input:focus {
-        transform: scale(1.03);
-        background: white;
-        border: 2px solid RGB(239,192,40);
-    }
-
-    & .nextQuestion {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: none;
-        overflow: hidden;
-        background-color: #EFC050;
-        width: 0;
-        height: 90%;
-        top: 50%;
-        transform: translateY(-50%);
-        transition: width .2s ease-out;
-        right: 1%;
-        color: white;
-        cursor: pointer;
-    }
-
-    & .nextQuestion:hover, .nextQuestion.active {
-        width: 10%;
-    }
-
-    & .wrongMessage {
-       display: none;
-       border-radius: 5px;
-       color: white;
-       background: RGB(214, 80, 118);
-       padding: 1%;
-       margin: 0.2rem 0;
-       font-size: 0.8rem;
-    }
-
-    & .wrongMessage.active {
-        display: block; 
-    }
-
-    & .result_page > * {
-        margin: 1rem 0;
-        padding: 0.5rem;
-    }
-
-    & .result_page > button {
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     }
 
     @media (max-width: 599px) {
-        & .nextQuestion {
-            width: 10%;
-        }        
+        display: block;
+        width: 100%;
+        background-color: white;
+        margin: 1rem auto;
+        border-radius: 0; 
     }
 
 `
 
 const dailyQuiz = props => {
     let showQuiz;
-    
+
     if (Object.keys(props.randomWord).length <= 0) {
         showQuiz = (
-            <div className='result_page'>
-                <h3>Result: {props.correct}/{props.amountOfWords}</h3>
-                <button type='button' onClick={props.showResultClicked}>Show result▾</button>
-            </div>
-            )
+            <ResultPage
+                correct={props.correct}
+                amountOfWords={props.amountOfWords}
+                showResultClicked={props.showResultClicked} />
+        );
+
     } else {
         showQuiz = (
-            <>
-                <span>{props.currentOrder}/{props.maxOrder}</span>
-                <div>Q. {props.randomWord.word}</div>
-                <div className='quiz_userInput'>
-                    <input 
-                        type='text'
-                        name='answer'
-                        autoComplete='off'></input>
-                    <span
-                        className={`nextQuestion ${props.wrongAnswer}`}
-                        onClick={props.nextQuestionClicked}>{'>'}</span>
-                </div>
-                <p className={`wrongMessage ${props.wrongAnswer}`}>Wrong answer! </p>
-                <Button buttonType='submit' funcType='daily'>enter</Button>
-            </>
+            <QuizPage
+                maxOrder={props.maxOrder}
+                currentOrder={props.currentOrder}
+                randomWord={props.randomWord}
+                wrongAnswer={props.wrongAnswer}
+                nextQuestionClicked={props.nextQuestionClicked} />
         );
     }
+
     return (
-        <StyledQuiz>
+        <StyledQuiz onSubmit={props.answerSubmitted}>
+            <h3>Daily</h3>
             {showQuiz}
+            <div className='quizButton_container'>
+                <button type='button' onClick={props.retryClicked}>retry</button>
+                <Button
+                    buttonType='button'
+                    funcType='cancel'
+                    clicked={props.cancelClicked}>cancel</Button>
+            </div>
         </StyledQuiz>
     );
 }

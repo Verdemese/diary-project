@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1273px" height="1273px" viewbox="0 0 1273 1273" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.40784314 0 0 0 0 0.40784314 0 0 0 0 0.40784314 0 0 0 1 0" />
+    </filter>
+    <path d="M0 0L1272 0L1272 1272L0 1272L0 0Z" id="path_1" />
+    <clipPath id="mask_1">
+      <use xlink:href="#path_1" />
+    </clipPath>
+  </defs>
+  <g id="Picture-icon" filter="url(#filter_1)">
+    <path d="M0 0L1272 0L1272 1272L0 1272L0 0Z" id="Background" fill="none" fill-rule="evenodd" stroke="none" />
+    <g clip-path="url(#mask_1)">
+      <path d="M0 0L0 874.5L1113 874.5L1113 0L0 0ZM79.5002 79.5L1033.5 79.5L1033.5 632.274L823.572 421.102L795.001 392.531L614.884 572.649L386.321 341.602L357.751 313.031L79.5002 591.281L79.5002 79.5ZM874.501 159C830.559 159 795.001 194.558 795.001 238.5C795.001 282.442 830.559 318 874.501 318C918.444 318 954.001 282.442 954.001 238.5C954.001 194.558 918.444 159 874.501 159L874.501 159ZM357.75 426.07L722.954 795L79.5002 795L79.5002 704.32L357.75 426.07ZM795.002 505.57L1033.5 744.07L1033.5 795L835.994 795L670.783 628.547L795.002 505.57Z" transform="translate(79.5 198.75)" id="Shape" fill="#FFFFFF" fill-rule="evenodd" stroke="none" />
+    </g>
+  </g>
+</svg>

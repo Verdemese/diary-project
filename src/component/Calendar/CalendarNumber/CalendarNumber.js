@@ -15,6 +15,7 @@ const StyledSpan = styled.span`
     &:hover {
         background-color: rgba(50, 168, 107, 0.4);
         color: white;
+        border-top: solid 8px white;
     }
 
     &.red {
@@ -23,8 +24,8 @@ const StyledSpan = styled.span`
     &.yellow {
         background-color: RGB(239, 192, 40);
     }
-    &.green {
-        background-color: #009B77;
+    &.blue {
+        background-color: #34568B;
     }
 
     @media (max-width: 599px) {
@@ -40,7 +41,7 @@ const calendarNumber = props => {
     
     if (amountWords > 0 && amountWords <= 10) color = 'red';
     if (amountWords > 10 && amountWords <= 20) color = 'yellow';
-    if (amountWords > 20) color = 'green';
+    if (amountWords > 20) color = 'blue';
 
     return (
         <StyledSpan 

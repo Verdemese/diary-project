@@ -4,37 +4,48 @@ import { connect } from 'react-redux';
 import ShowResult from '../../component/Quiz/ShowResult/ShowResult';
 import DailyQuiz from '../../component/Quiz/DailyQuiz/DailyQuiz';
 
-class Daily extends React.Component {
+class Monthly extends React.Component {
     state = {
         randomWord: {},
         leftWords: [],
         datesDetailForUpdate: [],
-        selectedDate: {},
+        originalRandomWords: [],
         wrongAnswer: false,
         answerHistory: [],
         showResult: false,
     }
 
-    // this.props.datesDetail = [{date, id, words: {word, meaning, checked, correct}}]
-
-    //this.props.selectedDate = {words, id, date, dayOfTheWeek}
-
-    //answerHistory: [{id: ######, meaning: '######'}]
-
     componentDidMount() {
-        const selectedDate = { ...this.props.selectedDate }
+        const selectedMonth =  [...this.props.datesDetail];
+        let monthWords = []; // all words in month
 
-        const index = Math.floor(Math.random() * (selectedDate.words.length));
+        selectedMonth.forEach(date => {
+            const identifiedWords = date.words.map(word => { 
+                    return word = {
+                        ...word,
+                        dateID: date.id
+                    }
+                });
 
-        const leftWords = this.props.selectedDate.words.filter((word, wordIndex) => index !== wordIndex);
+            monthWords = [...monthWords, ...identifiedWords];
+        });
 
-        const randomWord = { ...selectedDate.words[index], correct: false }
+        for (let i=monthWords.length-1; i>=20; i--) {
+            const index = Math.floor(Math.random() * (monthWords.length));
+            monthWords.splice(index, 1);
+        }
+
+        const originalRandomWords = [...monthWords];
+        
+        const index = Math.floor(Math.random() * (originalRandomWords.length));
+        const leftWords = originalRandomWords.filter((word, wordIndex) => index !== wordIndex);
+        const randomWord = { ...originalRandomWords[index], correct: false }
 
         this.setState({ 
+            originalRandomWords,
             randomWord, 
             leftWords, 
             datesDetailForUpdate: this.props.datesDetail,
-            selectedDate: this.props.selectedDate
         });
     }
 
@@ -54,7 +65,7 @@ class Daily extends React.Component {
     answerSubmitHandler = (event) => {
         event.preventDefault();
 
-        const selectedDate = { ...this.state.selectedDate }
+        const originalRandomWords = [...this.state.originalRandomWords];
         const userAnswer = event.target.answer.value;
         const leftWords = [...this.state.leftWords];
         const index = Math.floor(Math.random() * (leftWords.length));
@@ -69,7 +80,7 @@ class Daily extends React.Component {
         }
 
         if (userAnswer === this.state.randomWord.meaning) {
-            const updatedDate = selectedDate.words.map(word => {
+            const updatedWords = originalRandomWords.map(word => {
                 if (word.id === this.state.randomWord.id) {
                     
                     answerHistory = [...this.state.answerHistory, {id: word.id, meaning: userAnswer}];
@@ -83,18 +94,14 @@ class Daily extends React.Component {
             });
 
             this.setState({
-                selectedDate: {
-                    ...this.state.selectedDate,
-                    words: updatedDate
-                },
+                originalRandomWords: updatedWords,
                 randomWord,
                 leftWords: updatedLeftWords,
                 answerHistory
             });
 
         } else {
-
-            selectedDate.words.forEach(word => {
+            originalRandomWords.forEach(word => {
                 if (word.id === this.state.randomWord.id) {
                     answerHistory = [...this.state.answerHistory, {id: word.id, meaning: userAnswer}];
                 }
@@ -105,7 +112,7 @@ class Daily extends React.Component {
     }
 
     nextQuestionHandler = () => {
-        const selectedDate = { ...this.state.selectedDate }
+        const originalRandomWords = [...this.state.originalRandomWords];
         const leftWords = [...this.state.leftWords];
         const index = Math.floor(Math.random() * (leftWords.length));
         const updatedLeftWords = leftWords.filter((word, wordIndex) => index !== wordIndex);
@@ -118,14 +125,14 @@ class Daily extends React.Component {
             randomWord = {...leftWords[index]}
         }
 
-        selectedDate.words.forEach(word => {
+        originalRandomWords.forEach(word => {
             if (word.id === this.state.randomWord.id) {
                 answerHistory = [...this.state.answerHistory, { id: word.id, meaning: 'Passed' }];
             }
         });
 
         this.setState({ 
-            selectedDate,
+            originalRandomWords,
             randomWord,
             leftWords: updatedLeftWords,
             answerHistory
@@ -133,12 +140,20 @@ class Daily extends React.Component {
     }
 
     retryHandler = () => {
-        const selectedDate = { ...this.props.selectedDate }
-        const index = Math.floor(Math.random() * (selectedDate.words.length));
-        const leftWords = this.props.selectedDate.words.filter((word, wordIndex) => index !== wordIndex);
-        const randomWord = { ...selectedDate.words[index], correct: false }
+        const originalRandomWords = [...this.state.originalRandomWords];
 
-        this.setState({ randomWord, leftWords, selectedDate, answerHistory: [] });
+        const resetWords = originalRandomWords.map(word => {
+            return word = {
+                ...word,
+                correct: false
+            }
+        });
+
+        const index = Math.floor(Math.random() * (originalRandomWords.length));
+        const leftWords = originalRandomWords.filter((word, wordIndex) => index !== wordIndex);
+        const randomWord = { ...originalRandomWords[index], correct: false }
+
+        this.setState({ randomWord, leftWords, originalRandomWords: resetWords, answerHistory: [] });
     }
 
     cancelHandler = () => {
@@ -160,22 +175,22 @@ class Daily extends React.Component {
         let maxOrder = 0
         const wrongAnswer = this.state.wrongAnswer ? 'active' : '';
 
-        if (this.state.leftWords && this.state.selectedDate.words) {
-            currentOrder = this.state.selectedDate.words.length - this.state.leftWords.length;
+        if (this.state.leftWords && this.state.originalRandomWords) {
+            currentOrder = this.state.originalRandomWords.length - this.state.leftWords.length;
 
-            maxOrder = this.state.selectedDate.words.length;
+            maxOrder = this.state.originalRandomWords.length;
         }
 
-        if (this.state.selectedDate.words){
-            amountOfWords = this.state.selectedDate.words.length;
-            this.state.selectedDate.words.forEach(word => word.correct ? correct++ : null);
+        if (this.state.originalRandomWords){
+            amountOfWords = this.state.originalRandomWords.length;
+            this.state.originalRandomWords.forEach(word => word.correct ? correct++ : null);
         }
 
         return (
             <>
                 <ShowResult 
                     answerHistory={this.state.answerHistory}
-                    selectedDate={this.state.selectedDate.words}
+                    selectedDate={this.state.originalRandomWords}
                     showResult={this.state.showResult}
                     maxOrder={maxOrder}
                     correct={correct}
@@ -202,9 +217,8 @@ class Daily extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        selectedDate: state.user.selectedDate,
         datesDetail: state.user.datesDetail,
     }
 }
 
-export default connect(mapStateToProps)(Daily)
+export default connect(mapStateToProps)(Monthly)

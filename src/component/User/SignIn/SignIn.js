@@ -9,7 +9,7 @@ const StyledSignIn = styled.div`
     width: 30rem;
     background-color: white;
     max-height: auto;
-    padding: 10%;
+    padding: 5%;
     margin: 2rem auto;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);

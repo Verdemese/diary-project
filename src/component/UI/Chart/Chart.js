@@ -40,7 +40,7 @@ const Chart = props => {
 
 	let [grey, red, yellow, green] = [1, 0, 0, 0];
 
-	const labelColor = ['rgba(204,204,204, 0.5)', '#D65076', 'RGB(239, 192, 40)', '#009B77'];
+	const labelColor = ['rgba(204,204,204, 0.5)', '#D65076', 'RGB(239, 192, 40)', '#34568B'];
 
 	if (props.datesDetail) {
 		props.datesDetail.forEach(date => {

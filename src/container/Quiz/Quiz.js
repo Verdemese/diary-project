@@ -23,7 +23,7 @@ const StyledQuiz = styled.div`
     display: block;
     width: 30rem;
     background-color: white;
-    padding: 10%;
+    padding: 5%;
     max-height: 26rem;
     margin: 2rem auto;
     border-radius: 10px;
@@ -50,7 +50,7 @@ const StyledQuiz = styled.div`
         width: 100%;
         background-color: white;
         max-height: auto;
-        margin: auto;
+        margin: 1rem auto;
         border-radius: 0;
     }
 
@@ -98,7 +98,6 @@ class Quiz extends React.Component {
 
     componentWillUnmount() {
         //component가 unmount 될 때 dateForChange를 초기화 함.
-
         this.props.loadToday();
     }
  
@@ -183,15 +182,29 @@ class Quiz extends React.Component {
         }
     }
 
+    moveToMonthlyHandler = () => {
+
+        let checkEmptyMonth = [];
+
+        this.props.datesDetail.forEach(date => {
+            checkEmptyMonth = [...checkEmptyMonth, ...date.words];
+        })
+
+        if (checkEmptyMonth.length > 0) {
+            this.props.history.push({
+                pathname: `/quiz/${this.state.quizMethod}/${this.props.dateForChange.month + 1}`
+            });
+        } else {
+            this.setState({ message: 'Add word first!' });
+        }
+    }
+
     cancelHandler = () => {
         this.props.history.goBack();
     }
 
-
     render() {
-
         let dates = this.props.datesDetail.map(date => {
-
             return (
                 <CalendarNumber
                     id={date.id}
@@ -240,7 +253,7 @@ class Quiz extends React.Component {
                     <button
                         type='button'
                         className='check'
-                        onClick={this.closeModalHandler} />
+                        onClick={this.moveToMonthlyHandler} />
                 </>
             );
         }

@@ -1,4 +1,3 @@
-import { Result } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -10,7 +9,7 @@ const StyledResult = styled.div`
     padding: 10%;
     text-align: center;
     overflow: auto;
-    max-height: 100%;
+    max-height: 30rem;
 
     & .result_category {
         font-size: 0.7rem;
@@ -47,6 +46,10 @@ const StyledResult = styled.div`
         height: 0;
     }
 
+    @media (max-width: 599px) {
+        max-height: 100%7;
+    }
+
 `
 
 const showResult = (props) => {
@@ -54,19 +57,19 @@ const showResult = (props) => {
     let result;
     const percentage = Math.round((props.correct/props.maxOrder) * 100);
 
-    if (Object.keys(props.selectedDate).length > 0) {
-        const correctAnswers = props.selectedDate.words;
+        const correctAnswers = props.selectedDate;
         const answerHistory = props.answerHistory;
 
-        result = answerHistory.map(answer => {
+        result = answerHistory.map((answer, index) => {
             const resultItem = correctAnswers.find(word => word.id === answer.id);
+            const correct = resultItem.meaning === answer.meaning ? true : false;
 
             return <ResultItem
-                correct={resultItem.correct}
+                key={answer.meaning + index}
+                correct={correct}
                 correctAnswer={resultItem}
                 userAnswer={answer} />
         });
-    } 
 
     return (
         <>
@@ -78,7 +81,7 @@ const showResult = (props) => {
                     <h3>Result: {percentage}%</h3>
                     <div className='result_category'>
                         <span>Word</span>
-                        <span>Mean</span>
+                        <span>Meaning</span>
                         <span>Answer</span>
                     </div>
                     <ol>
